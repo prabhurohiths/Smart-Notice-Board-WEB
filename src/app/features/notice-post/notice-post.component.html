@@ -1,0 +1,12 @@
+<div>
+  <h3>Post New Notice</h3>
+  <input [(ngModel)]="notice.title" placeholder="Title" />
+  <textarea [(ngModel)]="notice.description" placeholder="Description"></textarea>
+  <input [(ngModel)]="notice.department" placeholder="Department" />
+  <input [(ngModel)]="notice.branch" placeholder="Branch" />
+  <input [(ngModel)]="notice.year" type="number" placeholder="Year" />
+  <input [(ngModel)]="notice.section" placeholder="Section" />
+  <button (click)="postNotice()">Post Notice</button>
+  <p *ngIf="success" style="color:green">{{success}}</p>
+  <p *ngIf="error" style="color:red">{{error}}</p>
+</div>

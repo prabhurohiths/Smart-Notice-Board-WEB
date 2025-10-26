@@ -1,0 +1,11 @@
+<h3>Notices</h3>
+
+<ul>
+  <li *ngFor="let notice of notices">
+    <strong>{{ notice.title }}</strong> - {{ notice.description }}
+    <small *ngIf="notice.department">({{ notice.department }})</small>
+    <p>Posted by: {{ notice.postedBy }} on {{ notice.postedDate | date:'medium' }}</p>
+  </li>
+</ul>
+
+<p *ngIf="notices.length === 0">No notices available.</p>

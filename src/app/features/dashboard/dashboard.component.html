@@ -1,0 +1,13 @@
+<div *ngIf="user">
+  <h2>Welcome, {{user.username}}</h2>
+
+  <!-- <div *ngIf="auth.hasRole('ADMIN') || auth.hasRole('TEACHER')">
+    <a routerLink="/post-notice">Post Notice</a>
+  </div> -->
+
+   <div>
+    <a routerLink="/post-notice">Post Notice</a>
+  </div>
+
+  <a routerLink="/notices">View Notices</a>
+</div>
