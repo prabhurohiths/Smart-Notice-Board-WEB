@@ -18,7 +18,7 @@ export class NoticeListComponent implements OnInit {
 
   ngOnInit() {
     const user = this.authService.getLoggedUser();
-    console.log("user -- ",user)
+    console.log("user -- ", user)
     if (user?.roles[0].name == "ADMIN") {
       this.noticeService.getAllNotices().subscribe({
         next: (data) => {
@@ -52,6 +52,38 @@ export class NoticeListComponent implements OnInit {
     }
   }
 
+
+  deleteNotice(noticeId: any): void {
+    const user = this.authService.getLoggedUser();
+
+    if (!user) return;
+
+    if (confirm("Are you sure you want to delete this notice?")) {
+      this.noticeService.deleteNotice(noticeId, user.id).subscribe({
+        next: () => {
+          this.notices = this.notices.filter(n => n.id !== noticeId);
+          alert("Notice deleted successfully!");
+        },
+        error: (err) => {
+          alert(err.error?.message || "You don't have permission to delete this notice.");
+        }
+      });
+    }
+  }
+
+  canDeleteNotice(notice: Notice): boolean {
+    const user = this.authService.getLoggedUser();
+
+    if (!user) return false;
+
+    const role = user.roles[0].name;
+    if (role === 'ADMIN') return true;
+    if (role === 'TEACHER' && notice.postedBy === user.username) return true;
+
+    return false;
+  }
+
+
   openImageInNewTab(base64Image: string): void {
     const newTab = window.open();
     if (newTab) {
@@ -61,7 +93,5 @@ export class NoticeListComponent implements OnInit {
       alert('Please allow popups for this site.');
     }
   }
-
-
 
 }

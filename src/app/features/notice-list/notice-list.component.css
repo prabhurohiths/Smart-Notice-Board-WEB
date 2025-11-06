@@ -4,7 +4,7 @@
   border-radius: 10px;
   margin-bottom: 20px;
   background-color: #fdfdfd;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .image-container {
@@ -34,10 +34,26 @@
   object-fit: cover;
   border-radius: 8px;
   border: 1px solid #ccc;
-  cursor: pointer; /* 👈 make it clear it's clickable */
+  cursor: pointer;
+  /* 👈 make it clear it's clickable */
   transition: transform 0.2s ease;
 }
 
 .notice-image:hover {
   transform: scale(1.05);
+}
+
+
+.delete-btn {
+  background-color: crimson;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 5px;
+}
+
+.delete-btn:hover {
+  background-color: darkred;
 }

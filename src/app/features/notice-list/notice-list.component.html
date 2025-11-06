@@ -6,16 +6,16 @@
   <small *ngIf="notice?.department">Department: {{ notice?.department }}</small>
   <p>Posted by: {{ notice?.postedBy }} on {{ notice?.postedDate | date:'medium' }}</p>
 
-  <!-- 🖼️ Display images -->
-<div *ngIf="notice?.imagePaths?.length as len" class="image-container" [hidden]="len === 0">
-  <img *ngFor="let img of notice.imagePaths"
-       [src]="img"
-       alt="Notice Image"
-       class="notice-image"
-       (click)="openImageInNewTab(img)">
+  <div *ngIf="notice?.imagePaths?.length as len" class="image-container" [hidden]="len === 0">
+    <img *ngFor="let img of notice.imagePaths" [src]="img" alt="Notice Image" class="notice-image"
+      (click)="openImageInNewTab(img)">
+  </div>
+
+  <!-- ✅ Conditionally show Delete button -->
+  <button *ngIf="canDeleteNotice(notice)" (click)="deleteNotice(notice.id)" class="delete-btn">
+    🗑️ Delete
+  </button>
 </div>
 
-
-</div>
 
 <p *ngIf="notices?.length === 0">No notices available.</p>

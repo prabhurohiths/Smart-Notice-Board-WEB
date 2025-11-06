@@ -28,12 +28,13 @@ export class NoticeService {
     }
     return this.http.get<Notice[]>(`${this.apiUrl}/getStudentNotices`, { headers: this.getHeaders(), params });
   }
-  
+
+  deleteNotice(id: number, userId: any): Observable<any> {
+    return this.http.delete<Notice[]>(`${this.apiUrl}/deleteNotice/${id}?userId=${userId}`, { headers: this.getHeaders() });
+  }
 
   postNotice(notice: Notice, postedById: any, files?: File[]): Observable<Notice> {
     const formData = new FormData();
-
-    // ✅ Must match the @RequestPart("noticeDto") in Spring Boot
     formData.append('notice', new Blob([JSON.stringify(notice)], { type: 'application/json' }));
 
     if (files && files.length > 0) {
@@ -45,6 +46,5 @@ export class NoticeService {
       formData
     );
   }
-
 
 }
