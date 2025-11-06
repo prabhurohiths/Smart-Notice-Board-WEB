@@ -3,9 +3,8 @@ export interface Notice {
   title: string;
   description: string;
   department?: string;
-  branch?: string;
   year?: number;
-  section?: string;
   postedBy?: string;
   postedDate?: string;
+  imagePaths?: string[]; // Base64 image data
 }

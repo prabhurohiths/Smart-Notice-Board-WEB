@@ -1,12 +1,36 @@
-<div>
+<!-- <div>
   <h3>Post New Notice</h3>
   <input [(ngModel)]="notice.title" placeholder="Title" />
   <textarea [(ngModel)]="notice.description" placeholder="Description"></textarea>
   <input [(ngModel)]="notice.department" placeholder="Department" />
-  <input [(ngModel)]="notice.branch" placeholder="Branch" />
   <input [(ngModel)]="notice.year" type="number" placeholder="Year" />
-  <input [(ngModel)]="notice.section" placeholder="Section" />
   <button (click)="postNotice()">Post Notice</button>
   <p *ngIf="success" style="color:green">{{success}}</p>
   <p *ngIf="error" style="color:red">{{error}}</p>
+</div> -->
+
+
+<div>
+  <h3>Post New Notice</h3>
+
+  <input [(ngModel)]="notice.title" placeholder="Title" />
+  <textarea [(ngModel)]="notice.description" placeholder="Description"></textarea>
+  <input [(ngModel)]="notice.department" placeholder="Department" />
+  <input [(ngModel)]="notice.year" type="number" placeholder="Year" />
+
+  <!-- Multiple image upload -->
+  <input type="file" (change)="onFilesSelected($event)" multiple accept="image/*" />
+
+  <!-- Preview selected images -->
+  <div *ngIf="previewUrls.length > 0">
+    <h4>Preview:</h4>
+    <div class="preview-container">
+      <img *ngFor="let img of previewUrls" [src]="img" width="120" style="margin: 5px; border-radius: 8px;" />
+    </div>
+  </div>
+
+  <button (click)="postNotice()">Post Notice</button>
+
+  <p *ngIf="success" style="color:green">{{ success }}</p>
+  <p *ngIf="error" style="color:red">{{ error }}</p>
 </div>

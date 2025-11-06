@@ -1,0 +1,43 @@
+.notice-card {
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  background-color: #fdfdfd;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.image-container {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.notice-image {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  transition: transform 0.2s ease;
+}
+
+.notice-image:hover {
+  transform: scale(1.05);
+}
+
+
+.notice-image {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  cursor: pointer; /* 👈 make it clear it's clickable */
+  transition: transform 0.2s ease;
+}
+
+.notice-image:hover {
+  transform: scale(1.05);
+}

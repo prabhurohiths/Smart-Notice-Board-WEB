@@ -1,11 +1,20 @@
 <h3>Notices</h3>
 
-<ul>
-  <li *ngFor="let notice of notices">
-    <strong>{{ notice.title }}</strong> - {{ notice.description }}
-    <small *ngIf="notice.department">({{ notice.department }})</small>
-    <p>Posted by: {{ notice.postedBy }} on {{ notice.postedDate | date:'medium' }}</p>
-  </li>
-</ul>
+<div *ngFor="let notice of notices" class="notice-card">
+  <h4>{{ notice.title }}</h4>
+  <p>{{ notice.description }}</p>
+  <small *ngIf="notice.department">Department: {{ notice.department }}</small>
+  <p>Posted by: {{ notice.postedBy }} on {{ notice.postedDate | date:'medium' }}</p>
+
+  <!-- 🖼️ Display images -->
+  <div *ngIf="notice?.imagePaths && notice?.imagePaths.length > 0" class="image-container">
+    <img *ngFor="let img of notice.imagePaths"
+         [src]="img"
+         alt="Notice Image"
+         class="notice-image"
+         (click)="openImageInNewTab(img)" >
+  </div>
+</div>
 
 <p *ngIf="notices.length === 0">No notices available.</p>
+

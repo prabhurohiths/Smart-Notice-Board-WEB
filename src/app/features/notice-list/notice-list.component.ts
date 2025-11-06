@@ -7,7 +7,8 @@ import { AuthService } from '../../core/services/auth.service';
 @Component({
   selector: 'app-notice-list',
   standalone: false,
-  templateUrl: './notice-list.component.html'
+  templateUrl: './notice-list.component.html',
+  styleUrls: ['./notice-list.component.css']
 })
 export class NoticeListComponent implements OnInit {
 
@@ -26,6 +27,17 @@ export class NoticeListComponent implements OnInit {
     }
   });
 }
+
+openImageInNewTab(base64Image: string): void {
+  const newTab = window.open();
+  if (newTab) {
+    newTab.document.write(`<img src="${base64Image}" style="width:100%; height:auto;" />`);
+    newTab.document.title = "Notice Image";
+  } else {
+    alert('Please allow popups for this site.');
+  }
+}
+
 
 
 }

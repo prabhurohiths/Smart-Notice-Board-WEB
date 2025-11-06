@@ -10,6 +10,9 @@ import { LoginComponent } from './features/login/login.component';
 import { NoticeListComponent } from './features/notice-list/notice-list.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoticePostComponent } from './features/notice-post/notice-post.component';
+import { AdminDashboardComponent } from './features/admin-dashboard/admin-dashboard.component';
+import { TeacherDashboardComponent } from './features/teacher-dashboard/teacher-dashboard.component';
+import { StudentDashboardComponent } from './features/student-dashboard/student-dashboard.component';
 
 
 @NgModule({
@@ -17,6 +20,9 @@ import { NoticePostComponent } from './features/notice-post/notice-post.componen
     AppComponent,
     LoginComponent,
     DashboardComponent,
+    AdminDashboardComponent,
+    TeacherDashboardComponent,
+    StudentDashboardComponent,
     NoticeListComponent,
     NoticePostComponent
   ],

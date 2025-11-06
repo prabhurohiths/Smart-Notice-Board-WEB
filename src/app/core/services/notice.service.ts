@@ -31,7 +31,25 @@ export class NoticeService {
     return this.http.get<Notice[]>(`${this.apiUrl}/getStudentNotices`, { headers: this.getHeaders(), params });
   }
 
-  postNotice(notice: Notice): Observable<Notice> {
-    return this.http.post<Notice>(`${this.apiUrl}/post`, notice, { headers: this.getHeaders() });
+  // postNotice(notice: Notice, postedById: any): Observable<Notice> {
+  //   return this.http.post<Notice>(`${this.apiUrl}/createNotice?postedById=${postedById}`, notice,
+  //     { headers: this.getHeaders() }
+  //   );
+  // }
+
+  postNotice(notice: Notice, postedById: any, files?: File[]): Observable<Notice> {
+  const formData = new FormData();
+  formData.append('notice', new Blob([JSON.stringify(notice)], { type: 'application/json' }));
+
+  if (files && files.length > 0) {
+    files.forEach(file => formData.append('images', file));
   }
+
+  return this.http.post<Notice>(
+    `${this.apiUrl}/createNotice?postedById=${postedById}`,
+    formData
+  );
+}
+
+
 }
