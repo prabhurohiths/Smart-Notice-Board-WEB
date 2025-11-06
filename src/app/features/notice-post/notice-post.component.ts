@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Notice } from '../../core/models/notice.model';
 import { NoticeService } from '../../core/services/notice.service';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-notice-post',
@@ -16,7 +17,7 @@ export class NoticePostComponent {
   success = '';
   error = '';
 
-  constructor(private noticeService: NoticeService, private router: Router) { }
+  constructor(private noticeService: NoticeService, private router: Router, private authService: AuthService) { }
 
   onFilesSelected(event: any) {
     const newFiles = Array.from(event.target.files as FileList) as File[];
@@ -43,7 +44,8 @@ export class NoticePostComponent {
 
 
   postNotice() {
-    const postedById = 1; // Replace with logged-in user ID
+    let user = this.authService.getLoggedUser();
+    const postedById = user?.id;
 
     this.noticeService.postNotice(this.notice, postedById, this.selectedFiles).subscribe({
       next: () => {
