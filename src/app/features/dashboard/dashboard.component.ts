@@ -20,8 +20,4 @@ export class DashboardComponent implements OnInit {
     this.role = this.user?.roles[0].name || '';
   }
 
-  logout() {
-    this.auth.logout();
-  }
-
 }

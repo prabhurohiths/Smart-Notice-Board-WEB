@@ -1,7 +1,5 @@
 <div class="dashboard">
   <h2>Welcome {{ role | titlecase }}, {{ user?.username }}</h2>
-  <button (click)="logout()" class="logout-btn">🚪 Logout</button>
-
 
   <!-- ADMIN VIEW -->
   <div *ngIf="role === 'ADMIN'">
