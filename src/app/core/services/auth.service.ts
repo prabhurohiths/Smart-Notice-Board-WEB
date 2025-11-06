@@ -19,6 +19,7 @@ export class AuthService {
   logout(): void {
     sessionStorage.removeItem('authToken');
     sessionStorage.removeItem('refreshToken');
+    sessionStorage.clear(); // Clears all items in sessionStorage
     this.router.navigate(['/login']);
   }
 

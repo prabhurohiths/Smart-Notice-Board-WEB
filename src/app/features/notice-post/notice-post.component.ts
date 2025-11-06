@@ -36,12 +36,10 @@ export class NoticePostComponent {
     event.target.value = '';
   }
 
-
   removeImage(index: number) {
     this.selectedFiles.splice(index, 1);
     this.previewUrls.splice(index, 1);
   }
-
 
   postNotice() {
     let user = this.authService.getLoggedUser();
