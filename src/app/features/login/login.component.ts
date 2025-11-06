@@ -31,23 +31,17 @@ export class LoginComponent {
     });
   }
 
+
   private redirectBasedOnRole(user: any) {
-    if (!user.roles || user.roles.length === 0) {
-      this.router.navigate(['/login']);
-      return;
-    }
-
-    const roleNames = user.roles.map((r: any) => r.name);
-    sessionStorage.setItem("loggedUserRole",roleNames[0])
-
-    if (roleNames.includes('ADMIN')) {
-      this.router.navigate(['/admin-dashboard']);
-    } else if (roleNames.includes('TEACHER')) {
-      this.router.navigate(['/teacher-dashboard']);
-    } else if (roleNames.includes('STUDENT')) {
-      this.router.navigate(['/student-dashboard']);
-    } else {
-      this.router.navigate(['/login']);
-    }
+  if (!user.roles || user.roles.length === 0) {
+    this.router.navigate(['/login']);
+    return;
   }
+
+  const roleNames = user.roles.map((r: any) => r.name);
+  sessionStorage.setItem("loggedUserRole", roleNames[0]);
+
+  this.router.navigate(['/dashboard']); // ✅ single entry point now
+}
+
 }

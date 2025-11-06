@@ -1,18 +1,16 @@
-import { NgModule, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
+import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing-module';
 import { AppComponent } from './app.component';
 import { AuthInterceptor } from './core/interceptors/auth-interceptor';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { LoginComponent } from './features/login/login.component';
 import { NoticeListComponent } from './features/notice-list/notice-list.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoticePostComponent } from './features/notice-post/notice-post.component';
-import { AdminDashboardComponent } from './features/admin-dashboard/admin-dashboard.component';
-import { TeacherDashboardComponent } from './features/teacher-dashboard/teacher-dashboard.component';
-import { StudentDashboardComponent } from './features/student-dashboard/student-dashboard.component';
+import { CommonModule } from '@angular/common';
 
 
 @NgModule({
@@ -20,9 +18,6 @@ import { StudentDashboardComponent } from './features/student-dashboard/student-
     AppComponent,
     LoginComponent,
     DashboardComponent,
-    AdminDashboardComponent,
-    TeacherDashboardComponent,
-    StudentDashboardComponent,
     NoticeListComponent,
     NoticePostComponent
   ],
@@ -30,7 +25,8 @@ import { StudentDashboardComponent } from './features/student-dashboard/student-
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule 
+    CommonModule,
+    ReactiveFormsModule
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),

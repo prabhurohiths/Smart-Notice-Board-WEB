@@ -1,13 +1,22 @@
-<div *ngIf="user">
-  <h2>Welcome, {{user.username}}</h2>
+<div class="dashboard">
+  <h2>Welcome {{ role | titlecase }}, {{ user?.username }}</h2>
+  <button (click)="logout()" class="logout-btn">🚪 Logout</button>
 
-  <!-- <div *ngIf="auth.hasRole('ADMIN') || auth.hasRole('TEACHER')">
-    <a routerLink="/post-notice">Post Notice</a>
-  </div> -->
 
-   <div>
-    <a routerLink="/post-notice">Post Notice</a>
+  <!-- ADMIN VIEW -->
+  <div *ngIf="role === 'ADMIN'">
+    <a routerLink="/post-notice" class="btn">📢 Post New Notice</a>
+    <a routerLink="/notices" class="btn">🗂️ View All Notices</a>
   </div>
 
-  <a routerLink="/notices">View Notices</a>
+  <!-- TEACHER VIEW -->
+  <div *ngIf="role === 'TEACHER'">
+    <a routerLink="/post-notice" class="btn">📢 Post Notice</a>
+    <a routerLink="/notices" class="btn">📚 View Department Notices</a>
+  </div>
+
+  <!-- STUDENT VIEW -->
+  <div *ngIf="role === 'STUDENT'">
+    <a routerLink="/notices" class="btn">📖 View Notices</a>
+  </div>
 </div>
