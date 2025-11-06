@@ -38,6 +38,7 @@ export class LoginComponent {
     }
 
     const roleNames = user.roles.map((r: any) => r.name);
+    sessionStorage.setItem("loggedUserRole",roleNames[0])
 
     if (roleNames.includes('ADMIN')) {
       this.router.navigate(['/admin-dashboard']);

@@ -19,37 +19,32 @@ export class NoticeService {
     return this.http.get<Notice[]>(`${this.apiUrl}/getAllNotices`, { headers: this.getHeaders() });
   }
 
-  getFilteredNotices(): Observable<Notice[]> {
+  getStudentNotices(): Observable<Notice[]> {
     const user = this.auth.getLoggedUser();
     let params = new HttpParams();
     if (user) {
       if (user.department) params = params.set('department', user.department);
-      if (user.branch) params = params.set('branch', user.branch);
       if (user.year) params = params.set('year', user.year.toString());
-      if (user.section) params = params.set('section', user.section);
     }
     return this.http.get<Notice[]>(`${this.apiUrl}/getStudentNotices`, { headers: this.getHeaders(), params });
   }
-
-  // postNotice(notice: Notice, postedById: any): Observable<Notice> {
-  //   return this.http.post<Notice>(`${this.apiUrl}/createNotice?postedById=${postedById}`, notice,
-  //     { headers: this.getHeaders() }
-  //   );
-  // }
+  
 
   postNotice(notice: Notice, postedById: any, files?: File[]): Observable<Notice> {
-  const formData = new FormData();
-  formData.append('notice', new Blob([JSON.stringify(notice)], { type: 'application/json' }));
+    const formData = new FormData();
 
-  if (files && files.length > 0) {
-    files.forEach(file => formData.append('images', file));
+    // ✅ Must match the @RequestPart("noticeDto") in Spring Boot
+    formData.append('notice', new Blob([JSON.stringify(notice)], { type: 'application/json' }));
+
+    if (files && files.length > 0) {
+      files.forEach(file => formData.append('images', file));
+    }
+
+    return this.http.post<Notice>(
+      `${this.apiUrl}/createNotice?postedById=${postedById}`,
+      formData
+    );
   }
-
-  return this.http.post<Notice>(
-    `${this.apiUrl}/createNotice?postedById=${postedById}`,
-    formData
-  );
-}
 
 
 }

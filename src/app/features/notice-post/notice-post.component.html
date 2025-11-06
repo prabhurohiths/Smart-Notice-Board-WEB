@@ -1,15 +1,3 @@
-<!-- <div>
-  <h3>Post New Notice</h3>
-  <input [(ngModel)]="notice.title" placeholder="Title" />
-  <textarea [(ngModel)]="notice.description" placeholder="Description"></textarea>
-  <input [(ngModel)]="notice.department" placeholder="Department" />
-  <input [(ngModel)]="notice.year" type="number" placeholder="Year" />
-  <button (click)="postNotice()">Post Notice</button>
-  <p *ngIf="success" style="color:green">{{success}}</p>
-  <p *ngIf="error" style="color:red">{{error}}</p>
-</div> -->
-
-
 <div>
   <h3>Post New Notice</h3>
 
@@ -25,8 +13,12 @@
   <div *ngIf="previewUrls.length > 0">
     <h4>Preview:</h4>
     <div class="preview-container">
-      <img *ngFor="let img of previewUrls" [src]="img" width="120" style="margin: 5px; border-radius: 8px;" />
-    </div>
+  <div *ngFor="let img of previewUrls; let i = index" style="display:inline-block; position:relative;">
+    <img [src]="img" width="120" style="margin:5px; border-radius:8px;">
+    <button (click)="removeImage(i)" style="position:absolute; top:2px; right:2px;">❌</button>
+  </div>
+</div>
+
   </div>
 
   <button (click)="postNotice()">Post Notice</button>

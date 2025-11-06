@@ -1,0 +1,22 @@
+.image-wrapper {
+  display: inline-block;
+  position: relative;
+  margin: 5px;
+}
+
+.preview-img {
+  border-radius: 8px;
+  width: 120px;
+  height: auto;
+}
+
+.remove-btn {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
