@@ -1,23 +1,165 @@
+/* dashboard.component.css */
 .dashboard {
+  min-height: calc(100vh - 70px);
+  background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+  padding: 40px 20px;
+}
+
+.dashboard-header {
   text-align: center;
-  margin-top: 40px;
+  margin-bottom: 50px;
+  animation: fadeInDown 0.6s ease-out;
 }
 
-.dashboard h2 {
-  margin-bottom: 20px;
+.dashboard-header h2 {
+  color: #2d3748;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 10px;
 }
 
-.btn {
-  display: inline-block;
-  margin: 10px;
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
+.dashboard-header p {
+  color: #718096;
+  font-size: 16px;
+}
+
+.dashboard-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.action-card {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  transition: all 0.3s ease;
   text-decoration: none;
-  border-radius: 6px;
-  transition: background-color 0.3s;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  animation: fadeInUp 0.6s ease-out;
+  animation-fill-mode: both;
 }
 
-.btn:hover {
-  background-color: #0056b3;
+.action-card:nth-child(1) { animation-delay: 0.1s; }
+.action-card:nth-child(2) { animation-delay: 0.2s; }
+.action-card:nth-child(3) { animation-delay: 0.3s; }
+
+.action-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.card-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.card-title {
+  color: #2d3748;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.card-description {
+  color: #718096;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Role-specific colors */
+.admin-card {
+  border-top: 4px solid #8b5cf6;
+}
+
+.admin-card:hover {
+  border-top-color: #7c3aed;
+}
+
+.teacher-card {
+  border-top: 4px solid #3b82f6;
+}
+
+.teacher-card:hover {
+  border-top-color: #2563eb;
+}
+
+.student-card {
+  border-top: 4px solid #10b981;
+}
+
+.student-card:hover {
+  border-top-color: #059669;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 30px 16px;
+  }
+
+  .dashboard-header h2 {
+    font-size: 26px;
+  }
+
+  .dashboard-actions {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .action-card {
+    padding: 24px;
+    min-height: 160px;
+  }
+
+  .card-icon {
+    font-size: 40px;
+  }
+
+  .card-title {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-header h2 {
+    font-size: 22px;
+  }
+
+  .card-icon {
+    font-size: 36px;
+  }
 }

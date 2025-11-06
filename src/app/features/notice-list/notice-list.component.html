@@ -1,21 +1,48 @@
-<h3>Notices</h3>
-
-<div *ngFor="let notice of notices" class="notice-card">
-  <h4>{{ notice?.title }}</h4>
-  <p>{{ notice?.description }}</p>
-  <small *ngIf="notice?.department">Department: {{ notice?.department }}</small>
-  <p>Posted by: {{ notice?.postedBy }} on {{ notice?.postedDate | date:'medium' }}</p>
-
-  <div *ngIf="notice?.imagePaths?.length as len" class="image-container" [hidden]="len === 0">
-    <img *ngFor="let img of notice.imagePaths" [src]="img" alt="Notice Image" class="notice-image"
-      (click)="openImageInNewTab(img)">
+<div class="notice-container">
+  <div class="page-header">
+    <h3>📋 Notice Board</h3>
+    <p>Stay informed with the latest updates</p>
   </div>
 
-  <!-- ✅ Conditionally show Delete button -->
-  <button *ngIf="canDeleteNotice(notice)" (click)="deleteNotice(notice.id)" class="delete-btn">
-    🗑️ Delete
-  </button>
+  <div class="notices-grid" *ngIf="(notices?.length ?? 0) > 0">
+    <div *ngFor="let notice of notices" class="notice-card">
+      <div class="notice-header">
+        <h4>{{ notice?.title }}</h4>
+      </div>
+
+      <p>{{ notice?.description }}</p>
+
+      <small *ngIf="notice?.department" class="department-badge">
+        {{ notice?.department }}
+      </small>
+
+      <div *ngIf="notice?.imagePaths?.length" class="image-container">
+        <img 
+          *ngFor="let img of notice.imagePaths" 
+          [src]="img" 
+          alt="Notice Image" 
+          class="notice-image"
+          (click)="openImageInNewTab(img)"
+        />
+      </div>
+
+      <div class="notice-meta">
+        <span>Posted by <span class="posted-by">{{ notice?.postedBy }}</span></span>
+        <span>{{ notice?.postedDate | date:'medium' }}</span>
+      </div>
+
+      <button 
+        *ngIf="canDeleteNotice(notice)" 
+        (click)="deleteNotice(notice.id)" 
+        class="delete-btn"
+      >
+        🗑️ Delete Notice
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="notices?.length === 0" class="no-notices">
+    <div class="no-notices-icon">📭</div>
+    <p>No notices available at the moment.</p>
+  </div>
 </div>
-
-
-<p *ngIf="notices?.length === 0">No notices available.</p>

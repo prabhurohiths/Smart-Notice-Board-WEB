@@ -1,28 +1,84 @@
-<div>
-  <h3>Post New Notice</h3>
+<div class="post-container">
+  <div class="post-card">
+    <div class="post-header">
+      <h3>📝 Create New Notice</h3>
+      <p>Share important information with your audience</p>
+    </div>
 
-  <input [(ngModel)]="notice.title" placeholder="Title" />
-  <textarea [(ngModel)]="notice.description" placeholder="Description"></textarea>
-  <input [(ngModel)]="notice.department" placeholder="Department" />
-  <input [(ngModel)]="notice.year" type="number" placeholder="Year" />
+    <form>
+      <div class="form-group">
+        <label>Title *</label>
+        <input 
+          class="form-input" 
+          [(ngModel)]="notice.title" 
+          name="title"
+          placeholder="Enter notice title" 
+        />
+      </div>
 
-  <!-- Multiple image upload -->
-  <input type="file" (change)="onFilesSelected($event)" multiple accept="image/*" />
+      <div class="form-group">
+        <label>Description *</label>
+        <textarea 
+          class="form-textarea" 
+          [(ngModel)]="notice.description" 
+          name="description"
+          placeholder="Provide detailed information about the notice"
+        ></textarea>
+      </div>
 
-  <!-- Preview selected images -->
-  <div *ngIf="previewUrls.length > 0">
-    <h4>Preview:</h4>
-    <div class="preview-container">
-  <div *ngFor="let img of previewUrls; let i = index" style="display:inline-block; position:relative;">
-    <img [src]="img" width="120" style="margin:5px; border-radius:8px;">
-    <button (click)="removeImage(i)" style="position:absolute; top:2px; right:2px;">❌</button>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Department</label>
+          <input 
+            class="form-input" 
+            [(ngModel)]="notice.department" 
+            name="department"
+            placeholder="e.g., Computer Science" 
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Year</label>
+          <input 
+            class="form-input" 
+            [(ngModel)]="notice.year" 
+            name="year"
+            type="number" 
+            placeholder="e.g., 2025" 
+          />
+        </div>
+      </div>
+
+      <div class="file-upload-wrapper">
+        <label class="file-upload-label">
+          <span class="upload-icon">📎</span>
+          <span>Click to upload images</span>
+          <input 
+            type="file" 
+            class="file-upload-input"
+            (change)="onFilesSelected($event)" 
+            multiple 
+            accept="image/*" 
+          />
+        </label>
+      </div>
+
+      <div *ngIf="previewUrls.length > 0" class="preview-section">
+        <h4 class="preview-header">Image Preview</h4>
+        <div class="preview-grid">
+          <div *ngFor="let img of previewUrls; let i = index" class="preview-item">
+            <img [src]="img" class="preview-image" alt="Preview">
+            <button type="button" (click)="removeImage(i)" class="remove-btn">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="submit-btn" (click)="postNotice()">
+        🚀 Post Notice
+      </button>
+
+      <p *ngIf="success" class="success-message">{{ success }}</p>
+      <p *ngIf="error" class="error-message">{{ error }}</p>
+    </form>
   </div>
-</div>
-
-  </div>
-
-  <button (click)="postNotice()">Post Notice</button>
-
-  <p *ngIf="success" style="color:green">{{ success }}</p>
-  <p *ngIf="error" style="color:red">{{ error }}</p>
 </div>

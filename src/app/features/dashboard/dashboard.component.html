@@ -1,20 +1,43 @@
 <div class="dashboard">
-  <h2>Welcome {{ role | titlecase }}, {{ user?.username }}</h2>
+  <div class="dashboard-header">
+    <h2>Welcome {{ role | titlecase }}, {{ user?.username }}</h2>
+    <p>What would you like to do today?</p>
+  </div>
 
   <!-- ADMIN VIEW -->
-  <div *ngIf="role === 'ADMIN'">
-    <a routerLink="/post-notice" class="btn">📢 Post New Notice</a>
-    <a routerLink="/notices" class="btn">🗂️ View All Notices</a>
+  <div class="dashboard-actions" *ngIf="role === 'ADMIN'">
+    <a routerLink="/post-notice" class="action-card admin-card">
+      <span class="card-icon">📢</span>
+      <h3 class="card-title">Post New Notice</h3>
+      <p class="card-description">Create and publish new notices for all users</p>
+    </a>
+    <a routerLink="/notices" class="action-card admin-card">
+      <span class="card-icon">🗂️</span>
+      <h3 class="card-title">View All Notices</h3>
+      <p class="card-description">Manage and review all posted notices</p>
+    </a>
   </div>
 
   <!-- TEACHER VIEW -->
-  <div *ngIf="role === 'TEACHER'">
-    <a routerLink="/post-notice" class="btn">📢 Post Notice</a>
-    <a routerLink="/notices" class="btn">📚 View Department Notices</a>
+  <div class="dashboard-actions" *ngIf="role === 'TEACHER'">
+    <a routerLink="/post-notice" class="action-card teacher-card">
+      <span class="card-icon">📢</span>
+      <h3 class="card-title">Post Notice</h3>
+      <p class="card-description">Share important updates with your department</p>
+    </a>
+    <a routerLink="/notices" class="action-card teacher-card">
+      <span class="card-icon">📚</span>
+      <h3 class="card-title">View Notices</h3>
+      <p class="card-description">Browse department notices and announcements</p>
+    </a>
   </div>
 
   <!-- STUDENT VIEW -->
-  <div *ngIf="role === 'STUDENT'">
-    <a routerLink="/notices" class="btn">📖 View Notices</a>
+  <div class="dashboard-actions" *ngIf="role === 'STUDENT'">
+    <a routerLink="/notices" class="action-card student-card">
+      <span class="card-icon">📖</span>
+      <h3 class="card-title">View Notices</h3>
+      <p class="card-description">Stay updated with latest announcements</p>
+    </a>
   </div>
 </div>
