@@ -4,6 +4,78 @@
     <p>Stay informed with the latest updates</p>
   </div>
 
+  <!-- 🔹 Admin Filter Section -->
+  <div *ngIf="isAdmin" class="filter-section">
+    <div class="filter-row">
+      <!-- 🔹 User Filter (still regular dropdown for simplicity) -->
+      <div class="form-group">
+        <label>User</label>
+        <div class="custom-dropdown" (click)="toggleUserDropdown()">
+          <span>{{ selectedUser || 'Select User' }}</span>
+          <ul *ngIf="userDropdownOpen" class="dropdown-list">
+            <li *ngFor="let user of teachersAndAdmins" (click)="selectUser(user.username, $event)">
+              {{ user.username }}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 🔹 Year Filter (custom dropdown) -->
+      <div class="form-group">
+        <label>Year</label>
+        <div class="custom-dropdown" (click)="toggleYearDropdown()">
+          <span>
+            {{
+            selectedYear !== null && selectedYear !== undefined
+            ? getYearLabel(selectedYear)
+            : 'Select Year'
+            }}
+          </span>
+          <ul *ngIf="yearDropdownOpen" class="dropdown-list">
+            <li *ngFor="let yr of years" (click)="selectYear(yr, $event)">
+              {{ getYearLabel(yr) }}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 🔹 Uploaded Year Filter -->
+      <div class="form-group">
+        <label>Uploaded Year</label>
+        <div class="custom-dropdown" (click)="toggleUploadedYearDropdown()">
+          <span>
+            {{ selectedUploadedYear || 'Select Uploaded Year' }}
+          </span>
+          <ul *ngIf="uploadedYearDropdownOpen" class="dropdown-list">
+            <li *ngFor="let y of uploadedYears" (click)="selectUploadedYear(y, $event)">
+              {{ y }}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 🔹 Department Filter -->
+      <div class="form-group">
+        <label>Department</label>
+        <div class="custom-dropdown" (click)="toggleDepartmentDropdown()">
+          <span>{{ selectedDepartment || 'Select Department' }}</span>
+          <ul *ngIf="departmentDropdownOpen" class="dropdown-list">
+            <li *ngFor="let dept of departments" (click)="selectDepartment(dept, $event)">
+              {{ dept }}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+
+
+      <button (click)="applyFilters()" class="filter-btn">Apply Filters</button>
+      <button (click)="resetFilters()" class="reset-btn">Reset</button>
+    </div>
+  </div>
+
+
+
   <div class="notices-grid" *ngIf="(notices?.length ?? 0) > 0">
     <div *ngFor="let notice of notices" class="notice-card">
       <div class="notice-header">
@@ -14,20 +86,15 @@
 
       <small *ngIf="notice?.department" class="department-badge">
         {{ notice?.department }}
-      </small> 
+      </small>
       &nbsp;
       <small *ngIf="notice?.year" class="department-badge">
         {{ notice?.year }}
       </small>
 
       <div *ngIf="notice?.imagePaths?.length" class="image-container">
-        <img 
-          *ngFor="let img of notice.imagePaths" 
-          [src]="img" 
-          alt="Notice Image" 
-          class="notice-image"
-          (click)="openImageInNewTab(img)"
-        />
+        <img *ngFor="let img of notice.imagePaths" [src]="img" alt="Notice Image" class="notice-image"
+          (click)="openImageInNewTab(img)" />
       </div>
 
       <div class="notice-meta">
@@ -35,11 +102,7 @@
         <span>{{ notice?.postedDate | date:'medium' }}</span>
       </div>
 
-      <button 
-        *ngIf="canDeleteNotice(notice)" 
-        (click)="deleteNotice(notice.id)" 
-        class="delete-btn"
-      >
+      <button *ngIf="canDeleteNotice(notice)" (click)="deleteNotice(notice.id)" class="delete-btn">
         🗑️ Delete Notice
       </button>
     </div>

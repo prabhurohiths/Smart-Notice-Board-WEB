@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class NoticeService {
 
-  private apiUrl = 'http://localhost:8080/api/notices';
+  private apiUrl = 'http://localhost:8080/';
 
   constructor(private http: HttpClient, private auth: AuthService) { }
 
@@ -16,7 +16,7 @@ export class NoticeService {
   }
 
   getAllNotices(): Observable<Notice[]> {
-    return this.http.get<Notice[]>(`${this.apiUrl}/getAllNotices`, { headers: this.getHeaders() });
+    return this.http.get<Notice[]>(`${this.apiUrl}api/notices/getAllNotices`, { headers: this.getHeaders() });
   }
 
   getStudentNotices(): Observable<Notice[]> {
@@ -26,11 +26,11 @@ export class NoticeService {
       if (user.department) params = params.set('department', user.department);
       if (user.year) params = params.set('year', user.year.toString());
     }
-    return this.http.get<Notice[]>(`${this.apiUrl}/getStudentNotices`, { headers: this.getHeaders(), params });
+    return this.http.get<Notice[]>(`${this.apiUrl}api/notices/getStudentNotices`, { headers: this.getHeaders(), params });
   }
 
   deleteNotice(id: number, userId: any): Observable<any> {
-    return this.http.delete<Notice[]>(`${this.apiUrl}/deleteNotice/${id}?userId=${userId}`, { headers: this.getHeaders() });
+    return this.http.delete<Notice[]>(`${this.apiUrl}api/notices/deleteNotice/${id}?userId=${userId}`, { headers: this.getHeaders() });
   }
 
   postNotice(notice: Notice, postedById: any, files?: File[]): Observable<Notice> {
@@ -42,9 +42,34 @@ export class NoticeService {
     }
 
     return this.http.post<Notice>(
-      `${this.apiUrl}/createNotice?postedById=${postedById}`,
+      `${this.apiUrl}api/notices/createNotice?postedById=${postedById}`,
       formData
     );
   }
+
+
+  // 🔹 Filter notices by postedBy and year (Admin)
+  filterNoticesByUserAndYear(postedBy?: string,year?: number,uploadedYear?: number,department?: string): Observable<Notice[]> {
+    let params = new HttpParams();
+    if (postedBy) params = params.set('postedBy', postedBy);
+    if (year) params = params.set('year', year.toString());
+    if (uploadedYear) params = params.set('uploadedYear', uploadedYear.toString());
+    if (department) params = params.set('department', department);
+
+    return this.http.get<Notice[]>(`${this.apiUrl}api/notices/filterByUserAndYear`, {
+      headers: this.getHeaders(),
+      params
+    });
+  }
+
+
+
+  // 🔹 Fetch all teachers and admins (for dropdown)
+  getAllTeachersAndAdmins(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}user/getAllTeachersAndAdmins`, {
+      headers: this.getHeaders()
+    });
+  }
+
 
 }

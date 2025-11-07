@@ -214,3 +214,138 @@
     align-items: flex-start;
   }
 }
+
+
+
+
+/* 🔹 Filter Section Styling */
+.filter-section {
+  background: white;
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin: 0 auto 40px auto;
+  max-width: 1100px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  animation: fadeIn 0.5s ease-out;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* 🔹 Form Group adjustments for clean spacing */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: 14px;
+  color: #4a5568;
+  min-width: 180px;
+}
+
+/* 🔹 Dropdown look & feel */
+.custom-dropdown {
+  background: #ffffff;
+  border: 1px solid #cbd5e0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  width: 180px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.custom-dropdown:hover {
+  border-color: #667eea;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.25);
+}
+
+.custom-dropdown span {
+  color: #2d3748;
+  font-weight: 500;
+}
+
+.dropdown-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  z-index: 15;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.dropdown-list li {
+  padding: 10px 14px;
+  transition: background 0.2s ease;
+}
+
+.dropdown-list li:hover {
+  background-color: #edf2f7;
+  color: #2d3748;
+}
+
+/* 🔹 Buttons */
+.filter-btn,
+.reset-btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.filter-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.filter-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+}
+
+.reset-btn {
+  background: #edf2f7;
+  color: #2d3748;
+}
+
+.reset-btn:hover {
+  background: #e2e8f0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(160, 174, 192, 0.2);
+}
+
+/* 🔹 Responsive layout for small screens */
+@media (max-width: 768px) {
+  .filter-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .form-group {
+    width: 100%;
+  }
+
+  .custom-dropdown,
+  .filter-btn,
+  .reset-btn {
+    width: 100%;
+  }
+}
