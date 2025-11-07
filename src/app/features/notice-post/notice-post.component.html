@@ -18,28 +18,31 @@
       </div>
 
       <div class="form-row">
+        <!-- Department Dropdown -->
         <div class="form-group">
           <label>Department</label>
-          <select class="form-input" [(ngModel)]="notice.department" name="department">
-            <option value="">Select Department</option>
-            <option value="CSE">Computer Science</option>
-            <option value="ECE">Electronics</option>
-            <option value="MECH">Mechanical</option>
-            <option value="CIVIL">Civil</option>
-            <option value="ALL">All Departments</option>
-          </select>
+          <div class="custom-dropdown" (click)="toggleDepartmentDropdown()">
+            <span>{{ notice.department || 'Select Department' }}</span>
+            <ul *ngIf="departmentDropdownOpen" class="dropdown-list">
+              <li *ngFor="let dept of departments" (click)="selectDepartment(dept, $event)">
+                {{ dept }}
+              </li>
+            </ul>
+          </div>
         </div>
 
+        <!-- Year Dropdown -->
         <div class="form-group">
           <label>Year</label>
-          <select class="form-input" [(ngModel)]="notice.year" name="year">
-            <option value="">Select Year</option>
-            <option value="1">1st Year</option>
-            <option value="2">2nd Year</option>
-            <option value="3">3rd Year</option>
-            <option value="4">4th Year</option>
-            <option value="0">All Years</option>
-          </select>
+          <div class="custom-dropdown" (click)="toggleYearDropdown()">
+            <span>{{ notice.year !== null && notice.year !== undefined ? getYearLabel(notice.year) : 'Select Year'
+              }}</span>
+            <ul *ngIf="yearDropdownOpen" class="dropdown-list">
+              <li *ngFor="let yr of years" (click)="selectYear(yr, $event)">
+                {{ getYearLabel(yr) }}
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 

@@ -14,6 +14,10 @@
 
       <small *ngIf="notice?.department" class="department-badge">
         {{ notice?.department }}
+      </small> 
+      &nbsp;
+      <small *ngIf="notice?.year" class="department-badge">
+        {{ notice?.year }}
       </small>
 
       <div *ngIf="notice?.imagePaths?.length" class="image-container">

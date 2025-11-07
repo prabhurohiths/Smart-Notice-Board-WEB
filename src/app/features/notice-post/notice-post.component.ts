@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { Notice } from '../../core/models/notice.model';
 import { NoticeService } from '../../core/services/notice.service';
@@ -11,11 +11,17 @@ import { AuthService } from '../../core/services/auth.service';
   styleUrls: ['./notice-post.component.css']
 })
 export class NoticePostComponent {
-  notice: Notice = { title: '', description: '', department: '', year: 0 };
+  notice: Notice = { title: '', description: '', department: '', year: null as any };
   selectedFiles: File[] = [];
   previewUrls: string[] = [];
   success = '';
   error = '';
+
+  //Custom Selection Dropdown
+  departmentDropdownOpen = false;
+  yearDropdownOpen = false;
+  departments = ['CSE', 'ECE', 'MECH', 'CIVIL', 'ALL'];
+  years = [1, 2, 3, 4, 0]; // 0 for "All Years"
 
   constructor(private noticeService: NoticeService, private router: Router, private authService: AuthService) { }
 
@@ -55,4 +61,49 @@ export class NoticePostComponent {
       }
     });
   }
+
+  // Toggle dropdowns
+  toggleDepartmentDropdown() {
+    this.departmentDropdownOpen = !this.departmentDropdownOpen;
+    this.yearDropdownOpen = false; // close other dropdown
+  }
+
+  toggleYearDropdown() {
+    this.yearDropdownOpen = !this.yearDropdownOpen;
+    this.departmentDropdownOpen = false; // close other dropdown
+  }
+
+  // Select handlers
+  selectDepartment(dept: string, event: Event) {
+    event.stopPropagation();
+    this.notice.department = dept;
+    this.departmentDropdownOpen = false;
+  }
+
+  selectYear(year: number, event: Event) {
+    event.stopPropagation();
+    this.notice.year = year;
+    this.yearDropdownOpen = false;
+  }
+
+  // Helper to show label for year
+  getYearLabel(year: number): string {
+    if (year === 0) return 'All Years';
+    if (year === 1) return '1st Year';
+    if (year === 2) return '2nd Year';
+    if (year === 3) return '3rd Year';
+    if (year === 4) return '4th Year';
+    return '';
+  }
+
+  // Optional: close dropdowns when clicking outside
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.custom-dropdown')) {
+      this.departmentDropdownOpen = false;
+      this.yearDropdownOpen = false;
+    }
+  }
+
 }

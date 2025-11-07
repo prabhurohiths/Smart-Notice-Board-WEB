@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class HeaderService {
-  private titleSource = new BehaviorSubject<string>('Dashboard');
+  private titleSource = new BehaviorSubject<string>('Virtual Notice Board');
   currentTitle$ = this.titleSource.asObservable();
 
   setTitle(title: string) {
