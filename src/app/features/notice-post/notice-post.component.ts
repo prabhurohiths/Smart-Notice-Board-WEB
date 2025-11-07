@@ -28,17 +28,17 @@ export class NoticePostComponent {
   onFilesSelected(event: any) {
     const newFiles = Array.from(event.target.files as FileList) as File[];
 
-    // ✅ Append new files to existing list instead of replacing
+    // Append new files to existing list instead of replacing
     this.selectedFiles = [...this.selectedFiles, ...newFiles];
 
-    // ✅ Generate previews for the newly added files only
+    // Generate previews for the newly added files only
     newFiles.forEach(file => {
       const reader = new FileReader();
       reader.onload = (e: any) => this.previewUrls.push(e.target.result);
       reader.readAsDataURL(file);
     });
 
-    // ✅ Optional: Reset file input value so the same file can be reselected
+    // Optional: Reset file input value so the same file can be reselected
     event.target.value = '';
   }
 

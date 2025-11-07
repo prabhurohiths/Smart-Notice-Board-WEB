@@ -48,8 +48,8 @@ export class NoticeService {
   }
 
 
-  // 🔹 Filter notices by postedBy and year (Admin)
-  filterNoticesByUserAndYear(postedBy?: string,year?: number,uploadedYear?: number,department?: string): Observable<Notice[]> {
+  // Filter notices by.. for (Admin)
+  filterNoticesByUserAndYear(postedBy?: string, year?: number, uploadedYear?: number, department?: string): Observable<Notice[]> {
     let params = new HttpParams();
     if (postedBy) params = params.set('postedBy', postedBy);
     if (year) params = params.set('year', year.toString());
@@ -62,14 +62,11 @@ export class NoticeService {
     });
   }
 
-
-
-  // 🔹 Fetch all teachers and admins (for dropdown)
+  // Fetch all teachers and admins
   getAllTeachersAndAdmins(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}user/getAllTeachersAndAdmins`, {
       headers: this.getHeaders()
     });
   }
-
 
 }

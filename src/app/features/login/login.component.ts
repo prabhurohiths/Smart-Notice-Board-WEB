@@ -5,7 +5,7 @@ import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
-   standalone: false,
+  standalone: false,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -32,17 +32,16 @@ export class LoginComponent {
     });
   }
 
-
   private redirectBasedOnRole(user: any) {
-  if (!user.roles || user.roles.length === 0) {
-    this.router.navigate(['/login']);
-    return;
+    if (!user.roles || user.roles.length === 0) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    const roleNames = user.roles.map((r: any) => r.name);
+    sessionStorage.setItem("loggedUserRole", roleNames[0]);
+
+    this.router.navigate(['/dashboard']); // single entry point now
   }
-
-  const roleNames = user.roles.map((r: any) => r.name);
-  sessionStorage.setItem("loggedUserRole", roleNames[0]);
-
-  this.router.navigate(['/dashboard']); // ✅ single entry point now
-}
 
 }

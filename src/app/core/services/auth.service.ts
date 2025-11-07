@@ -30,7 +30,7 @@ export class AuthService {
     sessionStorage.setItem('refreshToken', refreshToken);
   }
 
-  setLoggedUser(user:User){
+  setLoggedUser(user: User) {
     // sessionStorage.setItem('loggedUser',user);
     sessionStorage.setItem('loggedUser', JSON.stringify(user));
   }
@@ -46,11 +46,12 @@ export class AuthService {
   getRefreshToken(): string | null {
     return sessionStorage.getItem('refreshToken');
   }
-  
 
-  hasRole(roleName: string): boolean {
+  hasRole(requiredRoles: string[]): boolean {
     const user = this.getLoggedUser();
-    return user?.roles.some(r => r.name === roleName) || false;
+    if (!user || !user.roles) return false;
+    const userRoles = user.roles.map((r: any) => r.name);
+    return requiredRoles.some(role => userRoles.includes(role));
   }
 
 }

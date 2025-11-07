@@ -8,19 +8,26 @@ import { NoticePostComponent } from './features/notice-post/notice-post.componen
 import { DashbLayoutComponentComponent } from './features/dashboard-layout/dashboard-layout.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },  // default redirect
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
 
   {
     path: '',
-    component: DashbLayoutComponentComponent, // all pages with header
+    component: DashbLayoutComponentComponent,
     canActivate: [AuthGuard],
     children: [
-      { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
-      { path: 'notices', component: NoticeListComponent, canActivate: [AuthGuard] },
-      { path: 'post-notice', component: NoticePostComponent, canActivate: [AuthGuard] }
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'notices', component: NoticeListComponent },
+
+      // Only ADMIN or TEACHER can access this route
+      { 
+        path: 'post-notice', 
+        component: NoticePostComponent,
+        canActivate: [AuthGuard],
+        data: { roles: ['ADMIN', 'TEACHER'] } 
+      }
     ]
-  },  
+  },
 ];
 
 @NgModule({

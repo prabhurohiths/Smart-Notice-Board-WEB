@@ -28,7 +28,7 @@ export class NoticeListComponent implements OnInit {
   uploadedYearDropdownOpen = false;
   departmentDropdownOpen = false;
 
-  constructor(private noticeService: NoticeService, public authService: AuthService) {}
+  constructor(private noticeService: NoticeService, public authService: AuthService) { }
 
   ngOnInit() {
     const user = this.authService.getLoggedUser();
@@ -48,7 +48,7 @@ export class NoticeListComponent implements OnInit {
     return user?.roles?.some(r => r.name === 'ADMIN') || false;
   }
 
-  // 🔹 Load Notices Based on Role
+  // Load Notices Based on Role
   loadAllNotices() {
     this.noticeService.getAllNotices().subscribe({
       next: (data) => (this.notices = data),
@@ -70,7 +70,7 @@ export class NoticeListComponent implements OnInit {
     });
   }
 
-  // 🔹 Dropdown Toggles
+  // Dropdown Toggles
   toggleUserDropdown() {
     this.userDropdownOpen = !this.userDropdownOpen;
     this.closeOtherDropdowns('user');
@@ -91,7 +91,7 @@ export class NoticeListComponent implements OnInit {
     this.closeOtherDropdowns('department');
   }
 
-  // 🔹 Helper to close other dropdowns
+  // Helper to close other dropdowns
   private closeOtherDropdowns(openDropdown: string) {
     if (openDropdown !== 'user') this.userDropdownOpen = false;
     if (openDropdown !== 'year') this.yearDropdownOpen = false;
@@ -99,7 +99,7 @@ export class NoticeListComponent implements OnInit {
     if (openDropdown !== 'department') this.departmentDropdownOpen = false;
   }
 
-  // 🔹 Selection Handlers
+  // Selection Handlers
   selectUser(username: string, event: MouseEvent) {
     event.stopPropagation();
     this.selectedUser = username;
@@ -124,13 +124,13 @@ export class NoticeListComponent implements OnInit {
     this.departmentDropdownOpen = false;
   }
 
-  // 🔹 Display year label (1st, 2nd, etc.)
+  // Display year label (1st, 2nd, etc.)
   getYearLabel(year: number): string {
     const suffixes = ['1st Year', '2nd Year', '3rd Year', '4th Year'];
     return suffixes[year - 1] || `${year} Year`;
   }
 
-  // 🔹 Apply Filters (now includes department)
+  // Apply Filters (now includes department)
   applyFilters() {
     this.noticeService
       .filterNoticesByUserAndYear(
@@ -145,7 +145,7 @@ export class NoticeListComponent implements OnInit {
       });
   }
 
-  // 🔹 Reset Filters
+  // Reset Filters
   resetFilters() {
     this.selectedUser = '';
     this.selectedYear = null;
@@ -154,7 +154,7 @@ export class NoticeListComponent implements OnInit {
     this.loadAllNotices();
   }
 
-  // 🔹 Delete Notice Logic
+  // Delete Notice Logic
   deleteNotice(noticeId: any): void {
     const user = this.authService.getLoggedUser();
     if (!user) return;
@@ -172,7 +172,7 @@ export class NoticeListComponent implements OnInit {
     }
   }
 
-  // 🔹 Permission Check
+  // Permission Check
   canDeleteNotice(notice: Notice): boolean {
     const user = this.authService.getLoggedUser();
     if (!user) return false;
@@ -184,7 +184,7 @@ export class NoticeListComponent implements OnInit {
     return false;
   }
 
-  // 🔹 Open Image in New Tab
+  // Open Image in New Tab
   openImageInNewTab(base64Image: string): void {
     const newTab = window.open();
     if (newTab) {
