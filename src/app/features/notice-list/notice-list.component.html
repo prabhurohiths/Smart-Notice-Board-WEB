@@ -4,10 +4,10 @@
     <p>Stay informed with the latest updates</p>
   </div>
 
-  <!-- 🔹 Admin Filter Section -->
-  <div *ngIf="isAdmin" class="filter-section">
+  <!-- Admin Filter Section -->
+  <div *ngIf="isAdmin || isTeacher" class="filter-section">
     <div class="filter-row">
-      <!-- 🔹 User Filter (still regular dropdown for simplicity) -->
+      <!-- User Filter (still regular dropdown for simplicity) -->
       <div class="form-group">
         <label>User</label>
         <div class="custom-dropdown" (click)="toggleUserDropdown()">
@@ -20,7 +20,7 @@
         </div>
       </div>
 
-      <!-- 🔹 Year Filter (custom dropdown) -->
+      <!-- Year Filter (custom dropdown) -->
       <div class="form-group">
         <label>Year</label>
         <div class="custom-dropdown" (click)="toggleYearDropdown()">
@@ -39,7 +39,7 @@
         </div>
       </div>
 
-      <!-- 🔹 Uploaded Year Filter -->
+      <!-- Uploaded Year Filter -->
       <div class="form-group">
         <label>Uploaded Year</label>
         <div class="custom-dropdown" (click)="toggleUploadedYearDropdown()">
@@ -54,7 +54,7 @@
         </div>
       </div>
 
-      <!-- 🔹 Department Filter -->
+      <!-- Department Filter -->
       <div class="form-group">
         <label>Department</label>
         <div class="custom-dropdown" (click)="toggleDepartmentDropdown()">

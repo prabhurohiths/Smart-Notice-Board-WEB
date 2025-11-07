@@ -38,6 +38,7 @@ export class NoticeListComponent implements OnInit {
       this.loadTeachersAndAdmins();
     } else if (user?.roles?.[0]?.name === 'TEACHER') {
       this.loadAllNotices();
+      this.loadTeachersAndAdmins();
     } else {
       this.loadStudentNotices();
     }
@@ -46,6 +47,11 @@ export class NoticeListComponent implements OnInit {
   get isAdmin(): boolean {
     const user = this.authService.getLoggedUser();
     return user?.roles?.some(r => r.name === 'ADMIN') || false;
+  }
+
+   get isTeacher(): boolean {
+    const user = this.authService.getLoggedUser();
+    return user?.roles?.some(r => r.name === 'TEACHER') || false;
   }
 
   // Load Notices Based on Role
