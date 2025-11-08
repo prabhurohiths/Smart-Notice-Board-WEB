@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Notice } from '../../core/models/notice.model';
 import { NoticeService } from '../../core/services/notice.service';
 import { AuthService } from '../../core/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-notice-list',
@@ -28,7 +29,7 @@ export class NoticeListComponent implements OnInit {
   uploadedYearDropdownOpen = false;
   departmentDropdownOpen = false;
 
-  constructor(private noticeService: NoticeService, public authService: AuthService) { }
+  constructor(private noticeService: NoticeService, public authService: AuthService, private router: Router) { }
 
   ngOnInit() {
     const user = this.authService.getLoggedUser();
@@ -49,7 +50,7 @@ export class NoticeListComponent implements OnInit {
     return user?.roles?.some(r => r.name === 'ADMIN') || false;
   }
 
-   get isTeacher(): boolean {
+  get isTeacher(): boolean {
     const user = this.authService.getLoggedUser();
     return user?.roles?.some(r => r.name === 'TEACHER') || false;
   }
@@ -159,6 +160,23 @@ export class NoticeListComponent implements OnInit {
     this.selectedDepartment = '';
     this.loadAllNotices();
   }
+
+  canEditNotice(notice: Notice): boolean {
+    const user = this.authService.getLoggedUser();
+    if (!user) return false;
+
+    const role = user.roles[0].name;
+    if (role === 'ADMIN') return true;
+    if (role === 'TEACHER' && notice.postedBy === user.username) return true;
+
+    return false;
+  }
+
+  editNotice(notice: Notice): void {
+    this.noticeService.setNoticeToEdit(notice);
+    this.router.navigate(['/edit-notice', notice.id]);// navigate to edit page
+  }
+
 
   // Delete Notice Logic
   deleteNotice(noticeId: any): void {

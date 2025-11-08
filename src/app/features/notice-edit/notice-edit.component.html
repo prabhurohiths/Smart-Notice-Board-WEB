@@ -1,0 +1,59 @@
+<div class="post-container">
+  <div class="post-card">
+    <div class="post-header">
+      <h3>✏️ Edit Notice</h3>
+      <p>Update the notice details below</p>
+    </div>
+
+    <form>
+      <div class="form-group">
+        <label>Title *</label>
+        <input class="form-input" [(ngModel)]="notice.title" name="title" />
+      </div>
+
+      <div class="form-group">
+        <label>Description *</label>
+        <textarea class="form-textarea" [(ngModel)]="notice.description" name="description"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Department</label>
+          <select class="form-input" [(ngModel)]="notice.department" name="department">
+            <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Year</label>
+          <select class="form-input" [(ngModel)]="notice.year" name="year">
+            <option *ngFor="let yr of years" [value]="yr">{{ yr === 0 ? 'All Years' : yr }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="file-upload-wrapper">
+        <label class="file-upload-label">
+          <span class="upload-icon">📎</span>
+          <span>Click to upload new images</span>
+          <input type="file" (change)="onFilesSelected($event)" multiple accept="image/*" />
+        </label>
+      </div>
+
+      <div *ngIf="previewUrls.length > 0" class="preview-section">
+        <h4 class="preview-header">Image Preview</h4>
+        <div class="preview-grid">
+          <div *ngFor="let img of previewUrls; let i = index" class="preview-item">
+            <img [src]="img" class="preview-image" alt="Preview">
+            <button type="button" (click)="removeImage(i)" class="remove-btn">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="submit-btn" (click)="updateNotice()">💾 Update Notice</button>
+
+      <p *ngIf="success" class="success-message">{{ success }}</p>
+      <p *ngIf="error" class="error-message">{{ error }}</p>
+    </form>
+  </div>
+</div>

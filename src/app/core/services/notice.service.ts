@@ -9,14 +9,50 @@ export class NoticeService {
 
   private apiUrl = 'http://localhost:8080/';
 
+  private noticeToEdit: Notice | null = null;
+
   constructor(private http: HttpClient, private auth: AuthService) { }
 
   private getHeaders(): HttpHeaders {
     return new HttpHeaders({ 'Authorization': `Bearer ${this.auth.getToken()}` });
   }
 
+  setNoticeToEdit(notice: Notice) {
+    this.noticeToEdit = notice;
+  }
+
+  getNoticeToEdit(): Notice | null {
+    return this.noticeToEdit;
+  }
+
+  getNoticeById(id: number): Observable<Notice> {
+    return this.http.get<Notice>(`${this.apiUrl}api/notices/getNoticeById/${id}`, {
+      headers: this.getHeaders()
+    });
+  }
+
   getAllNotices(): Observable<Notice[]> {
     return this.http.get<Notice[]>(`${this.apiUrl}api/notices/getAllNotices`, { headers: this.getHeaders() });
+  }
+
+  updateNoticeWithImages(id: number, notice: Notice, files: File[]): Observable<any> {
+    const formData = new FormData();
+
+    // Clean up the notice before sending
+    const cleanNotice = {
+      ...notice,
+      imagePaths: notice.imageFileNames || [] // send file names, not base64
+    };
+
+    formData.append('notice', new Blob([JSON.stringify(cleanNotice)], { type: 'application/json' }));
+
+    if (files && files.length > 0) {
+      files.forEach((file) => formData.append('files', file));
+    }
+
+    return this.http.put(`${this.apiUrl}api/notices/updateNoticeWithImages/${id}`, formData, {
+      headers: new HttpHeaders({ Authorization: `Bearer ${this.auth.getToken()}` })
+    });
   }
 
   getStudentNotices(): Observable<Notice[]> {

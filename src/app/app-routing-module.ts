@@ -6,11 +6,11 @@ import { LoginComponent } from './features/login/login.component';
 import { NoticeListComponent } from './features/notice-list/notice-list.component';
 import { NoticePostComponent } from './features/notice-post/notice-post.component';
 import { DashbLayoutComponentComponent } from './features/dashboard-layout/dashboard-layout.component';
+import { NoticeEditComponent } from './features/notice-edit/notice-edit.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-
   {
     path: '',
     component: DashbLayoutComponentComponent,
@@ -18,14 +18,18 @@ const routes: Routes = [
     children: [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'notices', component: NoticeListComponent },
-
-      // Only ADMIN or TEACHER can access this route
+      { 
+        path: 'edit-notice/:id', 
+        component: NoticeEditComponent,
+        canActivate: [AuthGuard],
+        data: { roles: ['ADMIN', 'TEACHER'] } 
+      },
       { 
         path: 'post-notice', 
         component: NoticePostComponent,
         canActivate: [AuthGuard],
         data: { roles: ['ADMIN', 'TEACHER'] } 
-      }
+      },
     ]
   },
 ];

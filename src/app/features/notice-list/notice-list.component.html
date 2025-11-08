@@ -102,6 +102,10 @@
         <span>{{ notice?.postedDate | date:'medium' }}</span>
       </div>
 
+      <button *ngIf="canEditNotice(notice)" (click)="editNotice(notice)" class="delete-btn">
+        ✏️ Edit Notice
+      </button>
+
       <button *ngIf="canDeleteNotice(notice)" (click)="deleteNotice(notice.id)" class="delete-btn">
         🗑️ Delete Notice
       </button>

@@ -7,4 +7,5 @@ export interface Notice {
   postedBy?: string;
   postedDate?: string;
   imagePaths?: string[]; // Base64 image data
+  imageFileNames?: string[]; // actual backend filenames
 }
