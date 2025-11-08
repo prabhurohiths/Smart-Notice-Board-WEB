@@ -36,7 +36,9 @@
         <label class="file-upload-label">
           <span class="upload-icon">📎</span>
           <span>Click to upload new images</span>
-          <input type="file" (change)="onFilesSelected($event)" multiple accept="image/*" />
+          <!-- <input type="file" (change)="onFilesSelected($event)" multiple accept="image/*" /> -->
+          <input type="file" class="file-upload-input" (change)="onFilesSelected($event)" multiple accept="image/*" />
+
         </label>
       </div>
 
