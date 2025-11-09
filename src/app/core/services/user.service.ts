@@ -70,4 +70,29 @@ export class UserService {
   validateToken() {
     return this.http.get(this.authService.basePath + "sample/validatetoken");
   }
+
+
+  //--------------------
+
+  registerUser(user: User) {
+    return this.http.post(this.authService.basePath + 'user/register', user);
+  }
+
+  getAllUsers() {
+    return this.http.get<User[]>(this.authService.basePath + 'user/getAllUsers');
+  }
+
+  deleteUser(id: number): Observable<any> {
+    return this.http.delete(`${this.authService.basePath}user/delete/${id}`);
+  }
+
+  getUserById(id: number): Observable<User> {
+    return this.http.get<User>(`${this.authService.basePath}user/getUserById/${id}`);
+  }
+
+  updateUser(user: User): Observable<any> {
+    return this.http.put(`${this.authService.basePath}user/updateUser/${user.id}`, user);
+  }
+
+
 }

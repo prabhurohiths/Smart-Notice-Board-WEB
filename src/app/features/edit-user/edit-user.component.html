@@ -1,0 +1,73 @@
+<div class="edit-user-container">
+  <div class="page-header">
+    <h3>✏️ Edit User</h3>
+    <p>Modify user details and update their information</p>
+  </div>
+
+  <div class="form-card">
+    <form (ngSubmit)="updateUser()">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Username</label>
+          <input class="form-input readonly" [(ngModel)]="user.username" name="username" readonly />
+          <small class="input-hint">Username cannot be changed</small>
+        </div>
+
+        <div class="form-group">
+          <label>Full Name</label>
+          <input class="form-input" [(ngModel)]="user.name" name="name" placeholder="Enter full name" />
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input class="form-input" [(ngModel)]="user.gmail" name="gmail" type="email" placeholder="user@example.com" />
+        </div>
+
+        <div class="form-group">
+          <label>Mobile Number</label>
+          <input class="form-input" [(ngModel)]="user.mobileNumber" name="mobileNumber"
+            placeholder="Enter mobile number" />
+        </div>
+
+        <div class="form-group">
+          <label>Date of Birth</label>
+          <input class="form-input" type="date" [(ngModel)]="user.dateOfBirth" name="dateOfBirth" />
+        </div>
+
+        <div class="form-group">
+          <label>Department</label>
+          <select class="form-input" [(ngModel)]="user.department" name="department">
+            <option value="">Select Department</option>
+            <option value="Computer Science">Computer Science</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Mechanical">Mechanical</option>
+            <option value="Civil">Civil</option>
+            <option value="Electrical">Electrical</option>
+            <option value="Information Technology">Information Technology</option>
+            <option value="ALL">All Departments</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Role</label>
+          <select class="form-input" [(ngModel)]="selectedRole" name="role">
+            <option value="">Select Role</option>
+            <option value="ADMIN">Admin</option>
+            <option value="TEACHER">Teacher</option>
+            <option value="STUDENT">Student</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="save-btn">💾 Save Changes</button>
+        <button type="button" class="cancel-btn" (click)="router.navigate(['/manage-users'])">
+          ❌ Cancel
+        </button>
+      </div>
+
+      <p *ngIf="success" class="success-message">{{ success }}</p>
+      <p *ngIf="error" class="error-message">{{ error }}</p>
+    </form>
+  </div>
+</div>

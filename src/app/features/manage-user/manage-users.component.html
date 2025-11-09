@@ -1,0 +1,53 @@
+<div class="manage-users-container">
+  <div class="page-header">
+    <h3>👥 Manage Users</h3>
+    <p>View, edit, or remove users from the system</p>
+  </div>
+
+  <div class="user-table-card">
+    <div class="table-wrapper">
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Department</th>
+            <th>Role</th>
+            <th>Date of Birth</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let u of users">
+            <td data-label="Username">{{ u.username }}</td>
+            <td data-label="Name">{{ u.name }}</td>
+            <td data-label="Email">{{ u.gmail }}</td>
+            <td data-label="Department">
+              <span class="badge">{{ u.department }}</span>
+            </td>
+            <td data-label="Role">
+              <span
+                *ngIf="u.roles && u.roles.length > 0"
+                class="role-badge"
+                [ngClass]="getRoleClass(u.roles[0].name)">
+                {{ u.roles[0].name }}
+              </span>
+            </td>
+            <td data-label="Date of Birth">{{ u.dateOfBirth | date: 'mediumDate' }}</td>
+            <td data-label="Actions" class="actions">
+              <button class="edit-btn" (click)="editUser(u)">✏️ Edit</button>
+              <button class="delete-btn" (click)="deleteUser(u.id)">🗑️ Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="users.length === 0" class="no-users">
+      <div class="no-users-icon">📭</div>
+      <p>No users found in the system.</p>
+    </div>
+  </div>
+</div>

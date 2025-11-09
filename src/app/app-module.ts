@@ -13,6 +13,9 @@ import { NoticePostComponent } from './features/notice-post/notice-post.componen
 import { CommonModule } from '@angular/common';
 import { NoticeEditComponent } from './features/notice-edit/notice-edit.component';
 import { ResetPasswordComponent } from './features/reset-password/reset-password.component';
+import { ManageUsersComponent } from './features/manage-user/manage-users.component';
+import { AddUserComponent } from './features/add-user/add-user.component';
+import { EditUserComponent } from './features/edit-user/edit-user.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +25,10 @@ import { ResetPasswordComponent } from './features/reset-password/reset-password
     DashboardComponent,
     NoticeListComponent,
     NoticePostComponent,
-    NoticeEditComponent
+    NoticeEditComponent,
+    AddUserComponent,
+    ManageUsersComponent,
+    EditUserComponent,
   ],
   imports: [
     BrowserModule,

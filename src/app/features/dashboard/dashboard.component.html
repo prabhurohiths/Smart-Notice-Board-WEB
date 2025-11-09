@@ -11,12 +11,28 @@
       <h3 class="card-title">Post New Notice</h3>
       <p class="card-description">Create and publish new notices for all users</p>
     </a>
+
     <a routerLink="/notices" class="action-card admin-card">
       <span class="card-icon">🗂️</span>
       <h3 class="card-title">View All Notices</h3>
       <p class="card-description">Manage and review all posted notices</p>
     </a>
+
+    <!-- 🧩 NEW: Add New User -->
+    <a routerLink="/add-user" class="action-card admin-card">
+      <span class="card-icon">➕</span>
+      <h3 class="card-title">Add New User</h3>
+      <p class="card-description">Register Teachers, Students, or Admins</p>
+    </a>
+
+    <!-- 🧩 NEW: Manage Users -->
+    <a routerLink="/manage-users" class="action-card admin-card">
+      <span class="card-icon">👥</span>
+      <h3 class="card-title">Manage Users</h3>
+      <p class="card-description">Edit or update existing user information</p>
+    </a>
   </div>
+
 
   <!-- TEACHER VIEW -->
   <div class="dashboard-actions" *ngIf="role === 'TEACHER'">
