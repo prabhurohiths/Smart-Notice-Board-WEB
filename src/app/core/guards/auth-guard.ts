@@ -12,19 +12,19 @@ export class AuthGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const user = this.authService.getLoggedUser();
 
-    // 🧩 Step 1: Ensure user is logged in
+    // Step 1: Ensure user is logged in
     if (!user || !this.authService.isLoggedIn()) {
       this.router.navigate(['/login']);
       return false;
     }
 
-    // 🔒 Step 2: Block access to everything except reset-password for first-time users
+    // Step 2: Block access to everything except reset-password for first-time users
     if (user.firstLogin && state.url !== '/reset-password') {
       this.router.navigate(['/reset-password']);
       return false;
     }
 
-    // 👥 Step 3: Check if route requires certain roles
+    // Step 3: Check if route requires certain roles
     const allowedRoles = route.data['roles'] as Array<string>;
 
     if (allowedRoles && allowedRoles.length > 0) {
@@ -38,6 +38,6 @@ export class AuthGuard implements CanActivate {
       }
     }
 
-    return true; // ✅ Allow route access
+    return true; // Allow route access
   }
 }
