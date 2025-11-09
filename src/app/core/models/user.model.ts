@@ -5,6 +5,7 @@ export interface User {
   username: string;
   name?: string;
   mobileNumber?: string;
+  dateOfBirth?:string;
   gmail?: string;
   roles: Role[];
   department?: string;
