@@ -41,7 +41,12 @@ export class LoginComponent {
     const roleNames = user.roles.map((r: any) => r.name);
     sessionStorage.setItem("loggedUserRole", roleNames[0]);
 
-    this.router.navigate(['/dashboard']); // single entry point now
+    // If it's first login, redirect to reset-password page
+    if (user.firstLogin) {
+      this.router.navigate(['/reset-password']);
+    } else {
+      this.router.navigate(['/dashboard']);
+    }
   }
 
 }

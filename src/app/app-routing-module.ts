@@ -7,10 +7,12 @@ import { NoticeListComponent } from './features/notice-list/notice-list.componen
 import { NoticePostComponent } from './features/notice-post/notice-post.component';
 import { DashbLayoutComponentComponent } from './features/dashboard-layout/dashboard-layout.component';
 import { NoticeEditComponent } from './features/notice-edit/notice-edit.component';
+import { ResetPasswordComponent } from './features/reset-password/reset-password.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
   {
     path: '',
     component: DashbLayoutComponentComponent,

@@ -12,11 +12,13 @@ import { NoticeListComponent } from './features/notice-list/notice-list.componen
 import { NoticePostComponent } from './features/notice-post/notice-post.component';
 import { CommonModule } from '@angular/common';
 import { NoticeEditComponent } from './features/notice-edit/notice-edit.component';
+import { ResetPasswordComponent } from './features/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
+    ResetPasswordComponent,
     DashboardComponent,
     NoticeListComponent,
     NoticePostComponent,
