@@ -30,22 +30,32 @@
         </div>
 
         <div class="form-group">
-          <label>Date of Birth</label>
-          <input class="form-input" type="date" [(ngModel)]="user.dateOfBirth" name="dateOfBirth" />
-        </div>
-
-        <div class="form-group">
           <label>Department</label>
           <select class="form-input" [(ngModel)]="user.department" name="department">
             <option value="">Select Department</option>
-            <option value="Computer Science">Computer Science</option>
-            <option value="Electronics">Electronics</option>
-            <option value="Mechanical">Mechanical</option>
-            <option value="Civil">Civil</option>
-            <option value="Electrical">Electrical</option>
-            <option value="Information Technology">Information Technology</option>
+            <option value="CSE">Computer Science</option>
+            <option value="ECE">Electronics</option>
+            <option value="MECH">Mechanical</option>
+            <option value="CIVIL">Civil</option>
             <option value="ALL">All Departments</option>
           </select>
+        </div>
+
+        <div class="form-group">
+          <label>Year</label>
+          <select class="form-input" [(ngModel)]="user.year" name="year">
+            <option value="">Select Department</option>
+            <option value="1">1st Year</option>
+            <option value="2">2st Year</option>
+            <option value="3">3st Year</option>
+            <option value="4">4st Year</option>
+            <option value="0">All Departments</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Date of Birth</label>
+          <input class="form-input" type="date" [(ngModel)]="user.dateOfBirth" name="dateOfBirth" />
         </div>
 
         <div class="form-group">
