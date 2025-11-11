@@ -33,13 +33,18 @@ export class NoticeListComponent implements OnInit {
   uploadedYearDropdownOpen = false;
   departmentDropdownOpen = false;
 
+  //pagination variables
+  currentPage = 1;
+  itemsPerPage = 3; // You can change this
+  totalPages: number[] = [];
+
   constructor(
     private noticeService: NoticeService,
     private departmentService: DepartmentService,
     private yearService: YearService,
     public authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     const user = this.authService.getLoggedUser();
@@ -89,14 +94,21 @@ export class NoticeListComponent implements OnInit {
 
   loadAllNotices() {
     this.noticeService.getAllNotices().subscribe({
-      next: (data) => (this.notices = data),
+      next: (data) => {
+        this.notices = data;
+        this.updatePagination();
+      },
       error: (err) => console.error('Error fetching notices:', err)
     });
   }
 
+
   loadStudentNotices() {
     this.noticeService.getStudentNotices().subscribe({
-      next: (data) => (this.notices = data),
+      next: (data) => {
+        this.notices = data;
+        this.updatePagination();
+      },
       error: (err) => console.error('Error fetching student notices:', err)
     });
   }
@@ -179,7 +191,7 @@ export class NoticeListComponent implements OnInit {
 
   applyFilters() {
     this.noticeService
-      .filterNoticesByUserAndYear(
+      .filterNotices(
         this.selectedUser,
         this.selectedYear || undefined,
         this.selectedUploadedYear || undefined,
@@ -246,4 +258,31 @@ export class NoticeListComponent implements OnInit {
       alert('Please allow popups for this site.');
     }
   }
+
+  // Pagination settings
+  updatePagination() {
+    const total = Math.ceil(this.notices.length / this.itemsPerPage);
+    this.totalPages = Array.from({ length: total }, (_, i) => i + 1);
+  }
+
+  get paginatedNotices() {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    return this.notices.slice(start, end);
+  }
+
+  goToPage(page: number) {
+    if (page < 1 || page > this.totalPages.length) return;
+    this.currentPage = page;
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages.length) this.currentPage++;
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) this.currentPage--;
+  }
+
+
 }

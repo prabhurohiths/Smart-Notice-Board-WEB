@@ -79,7 +79,8 @@
 
 
   <div class="notices-grid" *ngIf="(notices?.length ?? 0) > 0">
-    <div *ngFor="let notice of notices" class="notice-card">
+    <div *ngFor="let notice of paginatedNotices" class="notice-card">
+
       <div class="notice-header">
         <h4>{{ notice?.title }}</h4>
       </div>
@@ -117,5 +118,17 @@
   <div *ngIf="notices?.length === 0" class="no-notices">
     <div class="no-notices-icon">📭</div>
     <p>No notices available at the moment.</p>
+  </div>
+
+  <!-- Pagination Controls -->
+  <div *ngIf="totalPages.length > 1" class="pagination-container">
+    <button class="page-btn" [disabled]="currentPage === 1" (click)="previousPage()">⬅ Prev</button>
+
+    <button *ngFor="let page of totalPages" class="page-number" [class.active]="page === currentPage"
+      (click)="goToPage(page)">
+      {{ page }}
+    </button>
+
+    <button class="page-btn" [disabled]="currentPage === totalPages.length" (click)="nextPage()">Next ➡</button>
   </div>
 </div>

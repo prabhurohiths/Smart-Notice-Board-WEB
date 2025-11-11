@@ -85,14 +85,14 @@ export class NoticeService {
 
 
   // Filter notices by.. for (Admin)
-  filterNoticesByUserAndYear(postedBy?: string, year?: number, uploadedYear?: number, department?: string): Observable<Notice[]> {
+  filterNotices(postedBy?: string, year?: number, uploadedYear?: number, department?: string): Observable<Notice[]> {
     let params = new HttpParams();
     if (postedBy) params = params.set('postedBy', postedBy);
     if (year) params = params.set('year', year.toString());
     if (uploadedYear) params = params.set('uploadedYear', uploadedYear.toString());
     if (department) params = params.set('department', department);
 
-    return this.http.get<Notice[]>(`${this.apiUrl}api/notices/filterByUserAndYear`, {
+    return this.http.get<Notice[]>(`${this.apiUrl}api/notices/filterNotices`, {
       headers: this.getHeaders(),
       params
     });
