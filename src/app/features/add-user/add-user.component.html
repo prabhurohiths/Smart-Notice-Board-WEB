@@ -8,8 +8,18 @@
     <form>
       <div class="form-group">
         <label>Username *</label>
-        <input class="form-input" [(ngModel)]="user.username" name="username" placeholder="Enter username" required />
+        <input class="form-input" [(ngModel)]="user.username" name="username" placeholder="Enter username" required
+          (input)="onUsernameInput(user.username)" />
+
+        <!-- Live Validation Message -->
+        <small *ngIf="usernameExists === true" style="color: #e53e3e; font-weight: 600;">
+          ❌ Username already taken
+        </small>
+        <small *ngIf="usernameExists === false" style="color: #10b981; font-weight: 600;">
+          ✅ Username available
+        </small>
       </div>
+
 
       <div class="form-group">
         <label>Full Name</label>
@@ -36,7 +46,7 @@
           <input class="form-input" [(ngModel)]="user.gmail" name="gmail" type="email" placeholder="user@example.com" />
         </div>
 
-        <!-- ✅ Year Dropdown -->
+        <!-- Year Dropdown -->
         <div class="form-group">
           <label>Year</label>
           <div class="custom-dropdown" (click)="toggleYearDropdown()">
@@ -64,7 +74,7 @@
       </div>
 
       <div class="form-row">
-        <!-- ✅ Department Dropdown -->
+        <!-- Department Dropdown -->
         <div class="form-group">
           <label>Department *</label>
           <div class="custom-dropdown" (click)="toggleDepartmentDropdown()">
@@ -77,7 +87,7 @@
           </div>
         </div>
 
-        <!-- ✅ Role Dropdown -->
+        <!-- Role Dropdown -->
         <div class="form-group">
           <label>Role *</label>
           <div class="custom-dropdown" (click)="toggleRoleDropdown()">
@@ -91,7 +101,9 @@
         </div>
       </div>
 
-      <button type="button" class="submit-btn" (click)="addUser()">✨ Create User</button>
+      <button type="button" class="submit-btn" (click)="addUser()" [disabled]="usernameExists === true">
+        ✨ Create User
+      </button>
 
       <p *ngIf="success" class="success-message">{{ success }}</p>
       <p *ngIf="error" class="error-message">{{ error }}</p>

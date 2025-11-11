@@ -8,6 +8,9 @@ import { User } from '../../core/models/user.model';
 import { Department } from '../../core/models/department.model';
 import { Year } from '../../core/models/year.model';
 import { Role } from '../../core/models/role.model';
+import { Subject } from 'rxjs';
+import { debounceTime, switchMap } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-add-user',
@@ -37,7 +40,7 @@ export class AddUserComponent implements OnInit {
   success = '';
   error = '';
 
-  // ✅ Dropdown state variables
+  // Dropdown state variables
   departmentDropdownOpen = false;
   yearDropdownOpen = false;
   roleDropdownOpen = false;
@@ -46,21 +49,42 @@ export class AddUserComponent implements OnInit {
   selectedYearName = '';
   selectedRole = '';
 
+  usernameInput$ = new Subject<string>();
+  usernameExists: boolean | null = null; // null = unknown
+
+
   constructor(
     private userService: UserService,
     private departmentService: DepartmentService,
     private yearService: YearService,
     private roleService: RoleService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadDepartments();
     this.loadYears();
     this.loadRoles();
+
+    // Debounced username check
+    this.usernameInput$
+      .pipe(
+        debounceTime(0),
+        switchMap(username => this.userService.checkUsernameExists(username))
+      )
+      .subscribe({
+        next: (res) => this.usernameExists = res.exists,
+        error: () => this.usernameExists = null
+      });
   }
 
-  // ✅ Fetch data from backend
+  onUsernameInput(username: string) {
+    this.usernameExists = null; // reset status
+    this.usernameInput$.next(username);
+  }
+
+
+  // Fetch data from backend
   loadDepartments() {
     this.departmentService.getAllDepartments().subscribe({
       next: (data) => this.departments = data
@@ -79,7 +103,7 @@ export class AddUserComponent implements OnInit {
     });
   }
 
-  // ✅ Dropdown Toggles
+  // Dropdown Toggles
   toggleDepartmentDropdown() {
     this.departmentDropdownOpen = !this.departmentDropdownOpen;
     this.yearDropdownOpen = false;
@@ -98,7 +122,7 @@ export class AddUserComponent implements OnInit {
     this.yearDropdownOpen = false;
   }
 
-  // ✅ Dropdown Selections
+  // Dropdown Selections
   selectDepartment(dept: Department, event: Event) {
     event.stopPropagation();
     this.selectedDepartment = dept.name;
@@ -130,11 +154,16 @@ export class AddUserComponent implements OnInit {
     }
   }
 
-  // ✅ Create user
+  // Create user
   addUser() {
     if (!this.user.username || !this.tempPassword || !this.confirmPassword || !this.user.department || !this.user.roles[0].name) {
       this.error = 'Please fill all required fields.';
       this.success = '';
+      return;
+    }
+
+    if (this.usernameExists === true) {
+      this.error = 'This username is already taken.';
       return;
     }
 

@@ -93,4 +93,7 @@ export class UserService {
     return this.http.put(`${this.authService.basePath}user/updateUser/${user.id}`, user);
   }
 
+  checkUsernameExists(username: string) {
+    return this.http.get<{ exists: boolean }>(this.authService.basePath + 'user/checkUsername?username=' + encodeURIComponent(username));
+  }
 }
