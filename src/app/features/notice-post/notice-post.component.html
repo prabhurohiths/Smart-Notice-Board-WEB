@@ -25,25 +25,28 @@
             <span>{{ notice.department || 'Select Department' }}</span>
             <ul *ngIf="departmentDropdownOpen" class="dropdown-list">
               <li *ngFor="let dept of departments" (click)="selectDepartment(dept, $event)">
-                {{ dept }}
+                {{ dept.name }}
               </li>
             </ul>
           </div>
         </div>
 
+
         <!-- Year Dropdown -->
         <div class="form-group">
           <label>Year</label>
           <div class="custom-dropdown" (click)="toggleYearDropdown()">
-            <span>{{ notice.year !== null && notice.year !== undefined ? getYearLabel(notice.year) : 'Select Year'
-              }}</span>
+            <span>
+              {{ notice.year !== null && notice.year !== undefined ? getYearLabel(notice.year) : 'Select Year' }}
+            </span>
             <ul *ngIf="yearDropdownOpen" class="dropdown-list">
               <li *ngFor="let yr of years" (click)="selectYear(yr, $event)">
-                {{ getYearLabel(yr) }}
+                {{ yr.yearName }}
               </li>
             </ul>
           </div>
         </div>
+
       </div>
 
       <div class="file-upload-wrapper">

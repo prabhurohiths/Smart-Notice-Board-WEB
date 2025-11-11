@@ -17,28 +17,41 @@
       </div>
 
       <div class="form-row">
+        <!-- ✅ Department Dropdown -->
         <div class="form-group">
           <label>Department</label>
-          <select class="form-input" [(ngModel)]="notice.department" name="department">
-            <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
-          </select>
+          <div class="custom-dropdown" (click)="toggleDepartmentDropdown()">
+            <span>{{ notice.department || 'Select Department' }}</span>
+            <ul *ngIf="departmentDropdownOpen" class="dropdown-list">
+              <li *ngFor="let dept of departments" (click)="selectDepartment(dept, $event)">
+                {{ dept.name }}
+              </li>
+            </ul>
+          </div>
         </div>
 
+        <!-- ✅ Year Dropdown -->
         <div class="form-group">
           <label>Year</label>
-          <select class="form-input" [(ngModel)]="notice.year" name="year">
-            <option *ngFor="let yr of years" [value]="yr">{{ yr === 0 ? 'All Years' : yr }}</option>
-          </select>
+          <div class="custom-dropdown" (click)="toggleYearDropdown()">
+            <span>
+              {{ notice.year !== null && notice.year !== undefined ? getYearLabel(notice.year) : 'Select Year' }}
+            </span>
+            <ul *ngIf="yearDropdownOpen" class="dropdown-list">
+              <li *ngFor="let yr of years" (click)="selectYear(yr, $event)">
+                {{ yr.yearName }}
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 
+      <!-- ✅ File Upload -->
       <div class="file-upload-wrapper">
         <label class="file-upload-label">
           <span class="upload-icon">📎</span>
           <span>Click to upload new images</span>
-          <!-- <input type="file" (change)="onFilesSelected($event)" multiple accept="image/*" /> -->
           <input type="file" class="file-upload-input" (change)="onFilesSelected($event)" multiple accept="image/*" />
-
         </label>
       </div>
 
@@ -46,7 +59,7 @@
         <h4 class="preview-header">Image Preview</h4>
         <div class="preview-grid">
           <div *ngFor="let img of previewUrls; let i = index" class="preview-item">
-            <img [src]="img" class="preview-image" alt="Preview">
+            <img [src]="img" class="preview-image" alt="Preview" />
             <button type="button" (click)="removeImage(i)" class="remove-btn">✕</button>
           </div>
         </div>

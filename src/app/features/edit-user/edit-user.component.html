@@ -29,28 +29,30 @@
             placeholder="Enter mobile number" />
         </div>
 
+        <!-- ✅ Custom Department Dropdown -->
         <div class="form-group">
           <label>Department</label>
-          <select class="form-input" [(ngModel)]="user.department" name="department">
-            <option value="">Select Department</option>
-            <option value="CSE">Computer Science</option>
-            <option value="ECE">Electronics</option>
-            <option value="MECH">Mechanical</option>
-            <option value="CIVIL">Civil</option>
-            <option value="ALL">All Departments</option>
-          </select>
+          <div class="custom-dropdown" (click)="toggleDepartmentDropdown()">
+            <span>{{ selectedDepartment || 'Select Department' }}</span>
+            <ul *ngIf="departmentDropdownOpen" class="dropdown-list">
+              <li *ngFor="let dept of departments" (click)="selectDepartment(dept, $event)">
+                {{ dept.name }}
+              </li>
+            </ul>
+          </div>
         </div>
 
+        <!-- ✅ Custom Year Dropdown -->
         <div class="form-group">
           <label>Year</label>
-          <select class="form-input" [(ngModel)]="user.year" name="year">
-            <option value="">Select Department</option>
-            <option value="1">1st Year</option>
-            <option value="2">2st Year</option>
-            <option value="3">3st Year</option>
-            <option value="4">4st Year</option>
-            <option value="0">All Departments</option>
-          </select>
+          <div class="custom-dropdown" (click)="toggleYearDropdown()">
+            <span>{{ selectedYearName || 'Select Year' }}</span>
+            <ul *ngIf="yearDropdownOpen" class="dropdown-list">
+              <li *ngFor="let y of years" (click)="selectYear(y, $event)">
+                {{ y.yearName }}
+              </li>
+            </ul>
+          </div>
         </div>
 
         <div class="form-group">
@@ -58,14 +60,17 @@
           <input class="form-input" type="date" [(ngModel)]="user.dateOfBirth" name="dateOfBirth" />
         </div>
 
+        <!-- ✅ Custom Role Dropdown -->
         <div class="form-group">
           <label>Role</label>
-          <select class="form-input" [(ngModel)]="selectedRole" name="role">
-            <option value="">Select Role</option>
-            <option value="ADMIN">Admin</option>
-            <option value="TEACHER">Teacher</option>
-            <option value="STUDENT">Student</option>
-          </select>
+          <div class="custom-dropdown" (click)="toggleRoleDropdown()">
+            <span>{{ selectedRole || 'Select Role' }}</span>
+            <ul *ngIf="roleDropdownOpen" class="dropdown-list">
+              <li *ngFor="let r of roles" (click)="selectRole(r, $event)">
+                {{ r.name }}
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 

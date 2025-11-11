@@ -2,7 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Notice } from '../../core/models/notice.model';
 import { NoticeService } from '../../core/services/notice.service';
 import { AuthService } from '../../core/services/auth.service';
+import { DepartmentService } from '../../core/services/department.service';
+import { YearService } from '../../core/services/year.service';
 import { Router } from '@angular/router';
+import { Department } from '../../core/models/department.model';
+import { Year } from '../../core/models/year.model';
 
 @Component({
   selector: 'app-notice-list',
@@ -20,30 +24,58 @@ export class NoticeListComponent implements OnInit {
   selectedUploadedYear: number | null = null;
   selectedDepartment: string = '';
 
-  years: number[] = [1, 2, 3, 4];
+  years: Year[] = [];
   uploadedYears: number[] = [2023, 2024, 2025];
-  departments: string[] = ['ALL', 'CSE', 'ECE', 'EEE', 'MECH', 'CIVIL', 'IT']; // Modify as needed
+  departments: Department[] = [];
 
   userDropdownOpen = false;
   yearDropdownOpen = false;
   uploadedYearDropdownOpen = false;
   departmentDropdownOpen = false;
 
-  constructor(private noticeService: NoticeService, public authService: AuthService, private router: Router) { }
+  constructor(
+    private noticeService: NoticeService,
+    private departmentService: DepartmentService,
+    private yearService: YearService,
+    public authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     const user = this.authService.getLoggedUser();
 
-    if (user?.roles?.[0]?.name === 'ADMIN') {
-      this.loadAllNotices();
-      this.loadTeachersAndAdmins();
-    } else if (user?.roles?.[0]?.name === 'TEACHER') {
+    // Load filters
+    this.loadDepartments();
+    this.loadYears();
+
+    // Load notices based on role
+    if (user?.roles?.[0]?.name === 'ADMIN' || user?.roles?.[0]?.name === 'TEACHER') {
       this.loadAllNotices();
       this.loadTeachersAndAdmins();
     } else {
       this.loadStudentNotices();
     }
   }
+
+  // ✅ Load departments dynamically
+  loadDepartments() {
+    this.departmentService.getAllDepartments().subscribe({
+      next: (data) => this.departments = data,
+      error: (err) => console.error('Failed to load departments', err)
+    });
+  }
+
+  // ✅ Load year levels dynamically
+  loadYears() {
+    this.yearService.getAllYears().subscribe({
+      next: (data) => this.years = data,
+      error: (err) => console.error('Failed to load years', err)
+    });
+  }
+
+  // ============================
+  // Existing Methods (unchanged)
+  // ============================
 
   get isAdmin(): boolean {
     const user = this.authService.getLoggedUser();
@@ -55,7 +87,6 @@ export class NoticeListComponent implements OnInit {
     return user?.roles?.some(r => r.name === 'TEACHER') || false;
   }
 
-  // Load Notices Based on Role
   loadAllNotices() {
     this.noticeService.getAllNotices().subscribe({
       next: (data) => (this.notices = data),
@@ -77,7 +108,10 @@ export class NoticeListComponent implements OnInit {
     });
   }
 
-  // Dropdown Toggles
+  // ============================
+  // Filter Dropdown Logic
+  // ============================
+
   toggleUserDropdown() {
     this.userDropdownOpen = !this.userDropdownOpen;
     this.closeOtherDropdowns('user');
@@ -98,7 +132,6 @@ export class NoticeListComponent implements OnInit {
     this.closeOtherDropdowns('department');
   }
 
-  // Helper to close other dropdowns
   private closeOtherDropdowns(openDropdown: string) {
     if (openDropdown !== 'user') this.userDropdownOpen = false;
     if (openDropdown !== 'year') this.yearDropdownOpen = false;
@@ -106,16 +139,19 @@ export class NoticeListComponent implements OnInit {
     if (openDropdown !== 'department') this.departmentDropdownOpen = false;
   }
 
-  // Selection Handlers
+  // ============================
+  // Selections
+  // ============================
+
   selectUser(username: string, event: MouseEvent) {
     event.stopPropagation();
     this.selectedUser = username;
     this.userDropdownOpen = false;
   }
 
-  selectYear(year: number, event: MouseEvent) {
+  selectYear(year: Year, event: MouseEvent) {
     event.stopPropagation();
-    this.selectedYear = year;
+    this.selectedYear = year.yearNumber;
     this.yearDropdownOpen = false;
   }
 
@@ -125,19 +161,22 @@ export class NoticeListComponent implements OnInit {
     this.uploadedYearDropdownOpen = false;
   }
 
-  selectDepartment(dept: string, event: MouseEvent) {
+  selectDepartment(dept: Department, event: MouseEvent) {
     event.stopPropagation();
-    this.selectedDepartment = dept;
+    this.selectedDepartment = dept.name;
     this.departmentDropdownOpen = false;
   }
 
-  // Display year label (1st, 2nd, etc.)
-  getYearLabel(year: number): string {
-    const suffixes = ['1st Year', '2nd Year', '3rd Year', '4th Year'];
-    return suffixes[year - 1] || `${year} Year`;
+  // 🧩 Label for Year (fetched dynamically)
+  getYearLabel(yearNumber: number): string {
+    const found = this.years.find(y => y.yearNumber === yearNumber);
+    return found ? found.yearName : '';
   }
 
-  // Apply Filters (now includes department)
+  // ============================
+  // Filter Actions
+  // ============================
+
   applyFilters() {
     this.noticeService
       .filterNoticesByUserAndYear(
@@ -152,7 +191,6 @@ export class NoticeListComponent implements OnInit {
       });
   }
 
-  // Reset Filters
   resetFilters() {
     this.selectedUser = '';
     this.selectedYear = null;
@@ -166,19 +204,14 @@ export class NoticeListComponent implements OnInit {
     if (!user) return false;
 
     const role = user.roles[0].name;
-    if (role === 'ADMIN') return true;
-    if (role === 'TEACHER' && notice.postedBy === user.username) return true;
-
-    return false;
+    return role === 'ADMIN' || (role === 'TEACHER' && notice.postedBy === user.username);
   }
 
   editNotice(notice: Notice): void {
     this.noticeService.setNoticeToEdit(notice);
-    this.router.navigate(['/edit-notice', notice.id]);// navigate to edit page
+    this.router.navigate(['/edit-notice', notice.id]);
   }
 
-
-  // Delete Notice Logic
   deleteNotice(noticeId: any): void {
     const user = this.authService.getLoggedUser();
     if (!user) return;
@@ -186,7 +219,7 @@ export class NoticeListComponent implements OnInit {
     if (confirm('Are you sure you want to delete this notice?')) {
       this.noticeService.deleteNotice(noticeId, user.id).subscribe({
         next: () => {
-          this.notices = this.notices.filter((n) => n.id !== noticeId);
+          this.notices = this.notices.filter(n => n.id !== noticeId);
           alert('Notice deleted successfully!');
         },
         error: (err) => {
@@ -196,19 +229,14 @@ export class NoticeListComponent implements OnInit {
     }
   }
 
-  // Permission Check
   canDeleteNotice(notice: Notice): boolean {
     const user = this.authService.getLoggedUser();
     if (!user) return false;
 
     const role = user.roles[0].name;
-    if (role === 'ADMIN') return true;
-    if (role === 'TEACHER' && notice.postedBy === user.username) return true;
-
-    return false;
+    return role === 'ADMIN' || (role === 'TEACHER' && notice.postedBy === user.username);
   }
 
-  // Open Image in New Tab
   openImageInNewTab(base64Image: string): void {
     const newTab = window.open();
     if (newTab) {

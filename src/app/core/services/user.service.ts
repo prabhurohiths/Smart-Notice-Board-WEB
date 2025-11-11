@@ -6,7 +6,6 @@ import { AuthService } from './auth.service';
 import { User } from '../models/user.model';
 import * as CryptoJS from 'crypto-js';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -93,6 +92,5 @@ export class UserService {
   updateUser(user: User): Observable<any> {
     return this.http.put(`${this.authService.basePath}user/updateUser/${user.id}`, user);
   }
-
 
 }
