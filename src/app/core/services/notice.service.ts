@@ -31,9 +31,13 @@ export class NoticeService {
     });
   }
 
-  getAllNotices(): Observable<Notice[]> {
-    return this.http.get<Notice[]>(`${this.apiUrl}api/notices/getAllNotices`, { headers: this.getHeaders() });
+  getAllNotices(page: number, size: number): Observable<any> {
+    return this.http.get<any>(
+      `${this.apiUrl}api/notices/getAllNotices?page=${page}&size=${size}`,
+      { headers: this.getHeaders() }
+    );
   }
+
 
   updateNoticeWithImages(id: number, notice: Notice, files: File[]): Observable<any> {
     const formData = new FormData();
@@ -55,15 +59,23 @@ export class NoticeService {
     });
   }
 
-  getStudentNotices(): Observable<Notice[]> {
+  getStudentNotices(page: number, size: number): Observable<any> {
     const user = this.auth.getLoggedUser();
-    let params = new HttpParams();
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
     if (user) {
       if (user.department) params = params.set('department', user.department);
       if (user.year) params = params.set('year', user.year.toString());
     }
-    return this.http.get<Notice[]>(`${this.apiUrl}api/notices/getStudentNotices`, { headers: this.getHeaders(), params });
+
+    return this.http.get<any>(`${this.apiUrl}api/notices/getStudentNotices`, {
+      headers: this.getHeaders(),
+      params
+    });
   }
+
 
   deleteNotice(id: number, userId: any): Observable<any> {
     return this.http.delete<Notice[]>(`${this.apiUrl}api/notices/deleteNotice/${id}?userId=${userId}`, { headers: this.getHeaders() });
@@ -85,18 +97,21 @@ export class NoticeService {
 
 
   // Filter notices by.. for (Admin)
-  filterNotices(postedBy?: string, year?: number, uploadedYear?: number, department?: string): Observable<Notice[]> {
-    let params = new HttpParams();
+  filterNotices(postedBy?: string, year?: number, uploadedYear?: number, department?: string, page: number = 0, size: number = 6): Observable<any> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
     if (postedBy) params = params.set('postedBy', postedBy);
     if (year) params = params.set('year', year.toString());
     if (uploadedYear) params = params.set('uploadedYear', uploadedYear.toString());
     if (department) params = params.set('department', department);
 
-    return this.http.get<Notice[]>(`${this.apiUrl}api/notices/filterNotices`, {
+    return this.http.get<any>(`${this.apiUrl}api/notices/filterNotices`, {
       headers: this.getHeaders(),
       params
     });
   }
+
 
   // Fetch all teachers and admins
   getAllTeachersAndAdmins(): Observable<any[]> {

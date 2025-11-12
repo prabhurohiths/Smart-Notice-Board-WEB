@@ -21,21 +21,23 @@
 
         <tbody>
           <tr *ngFor="let u of users">
-            <td data-label="Username">{{ u.username }}</td>
-            <td data-label="Name">{{ u.name }}</td>
-            <td data-label="Email">{{ u.gmail }}</td>
+            <td data-label="Username">{{ u.username || '-' }}</td>
+            <td data-label="Name">{{ u.name || '-' }}</td>
+            <td data-label="Email">{{ u.gmail || '-' }}</td>
             <td data-label="Department">
-              <span class="badge">{{ u.department }}</span>
+              <span class="badge">{{ u.department || 'NA' }}</span>
             </td>
             <td data-label="Role">
-              <span
-                *ngIf="u.roles && u.roles.length > 0"
-                class="role-badge"
-                [ngClass]="getRoleClass(u.roles[0].name)">
+              <span *ngIf="u.roles && u.roles.length > 0; else noRole"
+                    class="role-badge"
+                    [ngClass]="getRoleClass(u.roles[0].name)">
                 {{ u.roles[0].name }}
               </span>
+              <ng-template #noRole> - </ng-template>
             </td>
-            <td data-label="Date of Birth">{{ u.dateOfBirth | date: 'mediumDate' }}</td>
+            <td data-label="Date of Birth">
+              {{ u.dateOfBirth ? (u.dateOfBirth | date: 'mediumDate') : '-' }}
+            </td>
             <td data-label="Actions" class="actions">
               <button class="edit-btn" (click)="editUser(u)">✏️ Edit</button>
               <button class="delete-btn" (click)="deleteUser(u.id)">🗑️ Delete</button>
@@ -49,5 +51,19 @@
       <div class="no-users-icon">📭</div>
       <p>No users found in the system.</p>
     </div>
+  </div>
+
+  <!-- Pagination Controls -->
+  <div *ngIf="totalPages > 1" class="pagination-container">
+    <button class="page-btn" [disabled]="currentPage === 0" (click)="previousPage()">⬅ Prev</button>
+
+    <button *ngFor="let page of [].constructor(totalPages); let i = index"
+            class="page-number"
+            [class.active]="i === currentPage"
+            (click)="goToPage(i)">
+      {{ i + 1 }}
+    </button>
+
+    <button class="page-btn" [disabled]="currentPage === totalPages - 1" (click)="nextPage()">Next ➡</button>
   </div>
 </div>

@@ -87,13 +87,19 @@ export class AddUserComponent implements OnInit {
   // Fetch data from backend
   loadDepartments() {
     this.departmentService.getAllDepartments().subscribe({
-      next: (data) => this.departments = data
+      next: (data) => {
+        // remove "ALL" departments if present
+        this.departments = data.filter(dept => dept.name.toUpperCase() !== 'ALL');
+      }
     });
   }
 
   loadYears() {
     this.yearService.getAllYears().subscribe({
-      next: (data) => this.years = data
+      next: (data) => {
+        // remove year option if it's something like "ALL" or yearNumber = 0
+        this.years = data.filter(y => y.yearName.toUpperCase() !== 'ALL' && y.yearNumber !== 0);
+      }
     });
   }
 
@@ -142,6 +148,18 @@ export class AddUserComponent implements OnInit {
     this.selectedRole = role.name;
     this.user.roles[0].name = role.name;
     this.roleDropdownOpen = false;
+
+    // Disable department & year for ADMIN or TEACHER
+    if (role.name === 'ADMIN' || role.name === 'TEACHER') {
+      this.selectedDepartment = '';
+      this.selectedYearName = '';
+      this.user.department = '';
+      this.user.year = 0;
+    }
+  }
+
+  isRoleRestricted(): boolean {
+    return this.selectedRole === 'ADMIN' || this.selectedRole === 'TEACHER';
   }
 
   @HostListener('document:click', ['$event'])
@@ -156,33 +174,51 @@ export class AddUserComponent implements OnInit {
 
   // Create user
   addUser() {
-    if (!this.user.username || !this.tempPassword || !this.confirmPassword || !this.user.department || !this.user.roles[0].name) {
+    // Basic validations (common to all roles)
+    if (!this.user.username || !this.tempPassword || !this.confirmPassword || !this.user.roles[0].name) {
       this.error = 'Please fill all required fields.';
       this.success = '';
       return;
     }
 
+    // Role-based validation
+    const role = this.user.roles[0].name;
+    if (role === 'STUDENT') {
+      if (!this.user.department || !this.user.year) {
+        this.error = 'Please select department and year for students.';
+        this.success = '';
+        return;
+      }
+    }
+
+    // Username validation
     if (this.usernameExists === true) {
       this.error = 'This username is already taken.';
       return;
     }
 
+    // Password match check
     if (this.tempPassword !== this.confirmPassword) {
       this.error = 'Passwords do not match.';
       this.success = '';
       return;
     }
 
+    // Encrypt password
     this.user.password = this.userService.encryptPassword(this.tempPassword);
 
+    // Submit request
     this.userService.registerUser(this.user).subscribe({
       next: () => {
         this.success = '✅ User added successfully!';
+        this.error = '';
         setTimeout(() => this.router.navigate(['/manage-users']), 1500);
       },
       error: (err) => {
         this.error = err.error?.message || '❌ Error adding user.';
+        this.success = '';
       }
     });
   }
+
 }

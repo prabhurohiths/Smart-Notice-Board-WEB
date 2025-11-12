@@ -8,6 +8,8 @@ import { User } from '../../core/models/user.model';
 import { Department } from '../../core/models/department.model';
 import { Year } from '../../core/models/year.model';
 import { Role } from '../../core/models/role.model';
+import { forkJoin } from 'rxjs';
+
 
 @Component({
   selector: 'app-edit-user',
@@ -43,11 +45,31 @@ export class EditUserComponent implements OnInit {
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    if (id) this.loadUser(id);
+    if (!id) return;
 
-    this.loadDepartments();
-    this.loadYears();
-    this.loadRoles();
+    forkJoin({
+      user: this.userService.getUserById(id),
+      departments: this.departmentService.getAllDepartments(),
+      years: this.yearService.getAllYears(),
+      roles: this.roleService.getAllRoles()
+    }).subscribe({
+      next: ({ user, departments, years, roles }) => {
+        this.user = user;
+        this.departments = departments;
+        this.years = years.filter(y => y.yearName.toUpperCase() !== 'ALL' && y.yearNumber !== 0);
+        this.roles = roles;
+
+        this.selectedRole = user.roles[0]?.name ?? '';
+        this.selectedDepartment = user.department ?? '';
+
+        // now years are loaded, so this works correctly
+        this.selectedYearName = this.getYearLabel(user.year ?? 0);
+      },
+      error: (err) => {
+        console.error(err);
+        this.error = 'Failed to load user details.';
+      }
+    });
   }
 
   loadUser(id: number) {
@@ -80,7 +102,7 @@ export class EditUserComponent implements OnInit {
     });
   }
 
-  // ✅ Dropdown handling
+  // Dropdown handling
   toggleDepartmentDropdown() {
     this.departmentDropdownOpen = !this.departmentDropdownOpen;
     this.yearDropdownOpen = false;
@@ -118,6 +140,18 @@ export class EditUserComponent implements OnInit {
     this.selectedRole = role.name;
     this.user.roles = [{ id: 0, name: role.name }];
     this.roleDropdownOpen = false;
+
+    // If Admin or Teacher → clear department/year
+    if (role.name === 'ADMIN' || role.name === 'TEACHER') {
+      this.selectedDepartment = '';
+      this.selectedYearName = '';
+      this.user.department = '';
+      this.user.year = 0;
+    }
+  }
+
+  isRoleRestricted(): boolean {
+    return this.selectedRole === 'ADMIN' || this.selectedRole === 'TEACHER';
   }
 
   getYearLabel(yearNumber: number): string {
@@ -136,12 +170,34 @@ export class EditUserComponent implements OnInit {
   }
 
   updateUser() {
+    // Validate basic fields
+    if (!this.user.username || !this.selectedRole) {
+      this.error = 'Please fill all required fields.';
+      this.success = '';
+      return;
+    }
+
+    // Validate Department/Year for Students only
+    const role = this.selectedRole;
+    if (role === 'STUDENT') {
+      if (!this.user.department || !this.user.year) {
+        this.error = 'Department and Year are required for Student role.';
+        this.success = '';
+        return;
+      }
+    }
+
     this.userService.updateUser(this.user).subscribe({
       next: () => {
-        this.success = 'User updated successfully!';
-        setTimeout(() => this.router.navigate(['/manage-users']), 1200);
+        this.success = '✅ User updated successfully!';
+        this.error = '';
+        setTimeout(() => this.router.navigate(['/manage-users']), 200);
       },
-      error: () => (this.error = 'Failed to update user')
+      error: () => {
+        this.error = '❌ Failed to update user.';
+        this.success = '';
+      }
     });
   }
+
 }

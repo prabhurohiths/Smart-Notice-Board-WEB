@@ -240,6 +240,20 @@ select.form-input option {
   color: #4c51bf;
 }
 
+.custom-dropdown.disabled {
+  background: #f1f5f9;
+  color: #a0aec0;
+  cursor: not-allowed;
+  border-color: #e2e8f0;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.disabled-label {
+  color: #a0aec0 !important;
+}
+
+
 @keyframes dropdownFadeIn {
   from {
     opacity: 0;

@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Notice } from '../../core/models/notice.model';
-import { NoticeService } from '../../core/services/notice.service';
-import { AuthService } from '../../core/services/auth.service';
-import { DepartmentService } from '../../core/services/department.service';
-import { YearService } from '../../core/services/year.service';
 import { Router } from '@angular/router';
 import { Department } from '../../core/models/department.model';
+import { Notice } from '../../core/models/notice.model';
 import { Year } from '../../core/models/year.model';
+import { AuthService } from '../../core/services/auth.service';
+import { DepartmentService } from '../../core/services/department.service';
+import { NoticeService } from '../../core/services/notice.service';
+import { YearService } from '../../core/services/year.service';
 
 @Component({
   selector: 'app-notice-list',
@@ -33,10 +33,19 @@ export class NoticeListComponent implements OnInit {
   uploadedYearDropdownOpen = false;
   departmentDropdownOpen = false;
 
+  isFiltered: boolean = false;
+
+  filterCriteria = {
+    postedBy: '',
+    year: undefined as number | undefined,
+    uploadedYear: undefined as number | undefined,
+    department: undefined as string | undefined
+  };
+
   //pagination variables
-  currentPage = 1;
-  itemsPerPage = 3; // You can change this
-  totalPages: number[] = [];
+  currentPage = 0;
+  pageSize = 3;
+  totalPages = 0;
 
   constructor(
     private noticeService: NoticeService,
@@ -62,7 +71,7 @@ export class NoticeListComponent implements OnInit {
     }
   }
 
-  // ✅ Load departments dynamically
+  // Load departments dynamically
   loadDepartments() {
     this.departmentService.getAllDepartments().subscribe({
       next: (data) => this.departments = data,
@@ -70,7 +79,7 @@ export class NoticeListComponent implements OnInit {
     });
   }
 
-  // ✅ Load year levels dynamically
+  // Load year levels dynamically
   loadYears() {
     this.yearService.getAllYears().subscribe({
       next: (data) => this.years = data,
@@ -93,10 +102,10 @@ export class NoticeListComponent implements OnInit {
   }
 
   loadAllNotices() {
-    this.noticeService.getAllNotices().subscribe({
-      next: (data) => {
-        this.notices = data;
-        this.updatePagination();
+    this.noticeService.getAllNotices(this.currentPage, this.pageSize).subscribe({
+      next: (res) => {
+        this.notices = res.notices;
+        this.totalPages = res.totalPages;
       },
       error: (err) => console.error('Error fetching notices:', err)
     });
@@ -104,14 +113,15 @@ export class NoticeListComponent implements OnInit {
 
 
   loadStudentNotices() {
-    this.noticeService.getStudentNotices().subscribe({
-      next: (data) => {
-        this.notices = data;
-        this.updatePagination();
+    this.noticeService.getStudentNotices(this.currentPage, this.pageSize).subscribe({
+      next: (res) => {
+        this.notices = res.notices;
+        this.totalPages = res.totalPages;
       },
       error: (err) => console.error('Error fetching student notices:', err)
     });
   }
+
 
   loadTeachersAndAdmins() {
     this.noticeService.getAllTeachersAndAdmins().subscribe({
@@ -190,26 +200,50 @@ export class NoticeListComponent implements OnInit {
   // ============================
 
   applyFilters() {
+    this.filterCriteria = {
+      postedBy: this.selectedUser || '',
+      year: this.selectedYear || undefined,
+      uploadedYear: this.selectedUploadedYear || undefined,
+      department: this.selectedDepartment || undefined
+    };
+
+    this.isFiltered = true; // mark as filtered
+
     this.noticeService
       .filterNotices(
-        this.selectedUser,
-        this.selectedYear || undefined,
-        this.selectedUploadedYear || undefined,
-        this.selectedDepartment || undefined
+        this.filterCriteria.postedBy,
+        this.filterCriteria.year,
+        this.filterCriteria.uploadedYear,
+        this.filterCriteria.department,
+        this.currentPage,
+        this.pageSize
       )
       .subscribe({
-        next: (data) => (this.notices = data),
+        next: (res) => {
+          this.notices = res.notices;
+          this.totalPages = res.totalPages;
+        },
         error: (err) => console.error('Error applying filters:', err)
       });
   }
+
 
   resetFilters() {
     this.selectedUser = '';
     this.selectedYear = null;
     this.selectedUploadedYear = null;
     this.selectedDepartment = '';
+    this.isFiltered = false;
+    this.filterCriteria = {
+      postedBy: '',
+      year: undefined,
+      uploadedYear: undefined,
+      department: undefined
+    };
+    this.currentPage = 0;
     this.loadAllNotices();
   }
+
 
   canEditNotice(notice: Notice): boolean {
     const user = this.authService.getLoggedUser();
@@ -260,28 +294,63 @@ export class NoticeListComponent implements OnInit {
   }
 
   // Pagination settings
-  updatePagination() {
-    const total = Math.ceil(this.notices.length / this.itemsPerPage);
-    this.totalPages = Array.from({ length: total }, (_, i) => i + 1);
-  }
-
-  get paginatedNotices() {
-    const start = (this.currentPage - 1) * this.itemsPerPage;
-    const end = start + this.itemsPerPage;
-    return this.notices.slice(start, end);
-  }
-
   goToPage(page: number) {
-    if (page < 1 || page > this.totalPages.length) return;
+    if (page < 0 || page >= this.totalPages) return;
     this.currentPage = page;
+
+    if (this.isFiltered) {
+      this.loadFilteredNotices();
+    } else if (this.isAdmin || this.isTeacher) {
+      this.loadAllNotices();
+    } else {
+      this.loadStudentNotices();
+    }
   }
 
   nextPage() {
-    if (this.currentPage < this.totalPages.length) this.currentPage++;
+    if (this.currentPage < this.totalPages - 1) {
+      this.currentPage++;
+
+      if (this.isFiltered) {
+        this.loadFilteredNotices();
+      } else if (this.isAdmin || this.isTeacher) {
+        this.loadAllNotices();
+      } else {
+        this.loadStudentNotices();
+      }
+    }
   }
 
   previousPage() {
-    if (this.currentPage > 1) this.currentPage--;
+    if (this.currentPage > 0) {
+      this.currentPage--;
+
+      if (this.isFiltered) {
+        this.loadFilteredNotices();
+      } else if (this.isAdmin || this.isTeacher) {
+        this.loadAllNotices();
+      } else {
+        this.loadStudentNotices();
+      }
+    }
+  }
+  loadFilteredNotices() {
+    this.noticeService
+      .filterNotices(
+        this.filterCriteria.postedBy,
+        this.filterCriteria.year,
+        this.filterCriteria.uploadedYear,
+        this.filterCriteria.department,
+        this.currentPage,
+        this.pageSize
+      )
+      .subscribe({
+        next: (res) => {
+          this.notices = res.notices;
+          this.totalPages = res.totalPages;
+        },
+        error: (err) => console.error('Error fetching filtered notices:', err)
+      });
   }
 
 

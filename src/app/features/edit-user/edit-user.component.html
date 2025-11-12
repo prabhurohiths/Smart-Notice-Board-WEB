@@ -31,10 +31,11 @@
 
         <!-- ✅ Custom Department Dropdown -->
         <div class="form-group">
-          <label>Department</label>
-          <div class="custom-dropdown" (click)="toggleDepartmentDropdown()">
+          <label [class.disabled-label]="isRoleRestricted()">Department</label>
+          <div class="custom-dropdown" [class.disabled]="isRoleRestricted()"
+            (click)="!isRoleRestricted() && toggleDepartmentDropdown()">
             <span>{{ selectedDepartment || 'Select Department' }}</span>
-            <ul *ngIf="departmentDropdownOpen" class="dropdown-list">
+            <ul *ngIf="departmentDropdownOpen && !isRoleRestricted()" class="dropdown-list">
               <li *ngFor="let dept of departments" (click)="selectDepartment(dept, $event)">
                 {{ dept.name }}
               </li>
@@ -44,10 +45,11 @@
 
         <!-- ✅ Custom Year Dropdown -->
         <div class="form-group">
-          <label>Year</label>
-          <div class="custom-dropdown" (click)="toggleYearDropdown()">
+          <label [class.disabled-label]="isRoleRestricted()">Year</label>
+          <div class="custom-dropdown" [class.disabled]="isRoleRestricted()"
+            (click)="!isRoleRestricted() && toggleYearDropdown()">
             <span>{{ selectedYearName || 'Select Year' }}</span>
-            <ul *ngIf="yearDropdownOpen" class="dropdown-list">
+            <ul *ngIf="yearDropdownOpen && !isRoleRestricted()" class="dropdown-list">
               <li *ngFor="let y of years" (click)="selectYear(y, $event)">
                 {{ y.yearName }}
               </li>
