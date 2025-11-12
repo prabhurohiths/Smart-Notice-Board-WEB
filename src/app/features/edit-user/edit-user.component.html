@@ -29,7 +29,7 @@
             placeholder="Enter mobile number" />
         </div>
 
-        <!-- ✅ Custom Department Dropdown -->
+        <!-- Custom Department Dropdown -->
         <div class="form-group">
           <label [class.disabled-label]="isRoleRestricted()">Department</label>
           <div class="custom-dropdown" [class.disabled]="isRoleRestricted()"
@@ -43,7 +43,7 @@
           </div>
         </div>
 
-        <!-- ✅ Custom Year Dropdown -->
+        <!-- Custom Year Dropdown -->
         <div class="form-group">
           <label [class.disabled-label]="isRoleRestricted()">Year</label>
           <div class="custom-dropdown" [class.disabled]="isRoleRestricted()"
@@ -62,7 +62,7 @@
           <input class="form-input" type="date" [(ngModel)]="user.dateOfBirth" name="dateOfBirth" />
         </div>
 
-        <!-- ✅ Custom Role Dropdown -->
+        <!-- Custom Role Dropdown -->
         <div class="form-group">
           <label>Role</label>
           <div class="custom-dropdown" (click)="toggleRoleDropdown()">
