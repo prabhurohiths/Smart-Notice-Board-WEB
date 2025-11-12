@@ -42,27 +42,6 @@
 
       <div class="form-row">
         <div class="form-group">
-          <label>Email</label>
-          <input class="form-input" [(ngModel)]="user.gmail" name="gmail" type="email" placeholder="user@example.com" />
-        </div>
-
-        <!-- Year Dropdown -->
-        <div class="form-group">
-          <label [class.disabled-label]="isRoleRestricted()">Year</label>
-          <div class="custom-dropdown" [class.disabled]="isRoleRestricted()"
-            (click)="!isRoleRestricted() && toggleYearDropdown()">
-            <span>{{ selectedYearName || 'Select Year' }}</span>
-            <ul *ngIf="yearDropdownOpen && !isRoleRestricted()" class="dropdown-list">
-              <li *ngFor="let y of years" (click)="selectYear(y, $event)">
-                {{ y.yearName }}
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
           <label>Mobile Number</label>
           <input class="form-input" [(ngModel)]="user.mobileNumber" name="mobileNumber"
             placeholder="Enter mobile number" />
@@ -71,6 +50,26 @@
         <div class="form-group">
           <label>Date of Birth</label>
           <input class="form-input" type="date" [(ngModel)]="user.dateOfBirth" name="dateOfBirth" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Email</label>
+          <input class="form-input" [(ngModel)]="user.gmail" name="gmail" type="email" placeholder="user@example.com" />
+        </div>
+
+        <!-- Role Dropdown -->
+        <div class="form-group">
+          <label>Role *</label>
+          <div class="custom-dropdown" (click)="toggleRoleDropdown()">
+            <span>{{ selectedRole || 'Select Role' }}</span>
+            <ul *ngIf="roleDropdownOpen" class="dropdown-list">
+              <li *ngFor="let r of roles" (click)="selectRole(r, $event)">
+                {{ r.name }}
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 
@@ -89,14 +88,15 @@
           </div>
         </div>
 
-        <!-- Role Dropdown -->
+        <!-- Year Dropdown -->
         <div class="form-group">
-          <label>Role *</label>
-          <div class="custom-dropdown" (click)="toggleRoleDropdown()">
-            <span>{{ selectedRole || 'Select Role' }}</span>
-            <ul *ngIf="roleDropdownOpen" class="dropdown-list">
-              <li *ngFor="let r of roles" (click)="selectRole(r, $event)">
-                {{ r.name }}
+          <label [class.disabled-label]="isRoleRestricted()">Year</label>
+          <div class="custom-dropdown" [class.disabled]="isRoleRestricted()"
+            (click)="!isRoleRestricted() && toggleYearDropdown()">
+            <span>{{ selectedYearName || 'Select Year' }}</span>
+            <ul *ngIf="yearDropdownOpen && !isRoleRestricted()" class="dropdown-list">
+              <li *ngFor="let y of years" (click)="selectYear(y, $event)">
+                {{ y.yearName }}
               </li>
             </ul>
           </div>
