@@ -74,25 +74,24 @@
     </div>
   </div>
 
-
-
   <div class="notices-grid" *ngIf="(notices?.length ?? 0) > 0">
     <div *ngFor="let notice of notices" class="notice-card">
-
-
+      
       <div class="notice-header">
         <h4>{{ notice?.title }}</h4>
       </div>
 
       <p>{{ notice?.description }}</p>
 
-      <small *ngIf="notice?.department" class="department-badge">
-        {{ notice?.department }}
-      </small>
-      &nbsp;
-      <small *ngIf="notice?.year" class="department-badge">
-        {{ notice?.year }}
-      </small>
+      <div class="badge-container">
+        <small *ngIf="notice?.department" class="badge badge-department">
+          {{ notice?.department }}
+        </small>
+
+        <small *ngIf="notice?.year" class="badge badge-year">
+          {{ notice?.year }}
+        </small>
+      </div>
 
       <div *ngIf="notice?.imagePaths?.length" class="image-container">
         <img *ngFor="let img of notice.imagePaths" [src]="img" alt="Notice Image" class="notice-image"
@@ -104,13 +103,14 @@
         <span>{{ notice?.postedDate | date:'medium' }}</span>
       </div>
 
-      <button *ngIf="canEditNotice(notice)" (click)="editNotice(notice)" class="delete-btn">
+      <button *ngIf="canEditNotice(notice)" (click)="editNotice(notice)" class="notice-action-btn edit-btn">
         ✏️ Edit Notice
       </button>
 
-      <button *ngIf="canDeleteNotice(notice)" (click)="deleteNotice(notice.id)" class="delete-btn">
+      <button *ngIf="canDeleteNotice(notice)" (click)="deleteNotice(notice.id)" class="notice-action-btn delete-btn">
         🗑️ Delete Notice
       </button>
+
     </div>
   </div>
 
