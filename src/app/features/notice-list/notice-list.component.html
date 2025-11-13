@@ -74,9 +74,43 @@
     </div>
   </div>
 
+  <!-- Student Filter Section -->
+  <div *ngIf="!isAdmin && !isTeacher" class="filter-section">
+    <div class="filter-row">
+      <!-- User Filter -->
+      <div class="form-group">
+        <label>Posted By</label>
+        <div class="custom-dropdown" (click)="toggleUserDropdown()">
+          <span>{{ selectedUser || 'Select User' }}</span>
+          <ul *ngIf="userDropdownOpen" class="dropdown-list">
+            <li *ngFor="let user of teachersAndAdmins" (click)="selectUser(user.username, $event)">
+              {{ user.username }}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Uploaded Year Filter -->
+      <div class="form-group">
+        <label>Uploaded Year</label>
+        <div class="custom-dropdown" (click)="toggleUploadedYearDropdown()">
+          <span>{{ selectedUploadedYear || 'Select Uploaded Year' }}</span>
+          <ul *ngIf="uploadedYearDropdownOpen" class="dropdown-list">
+            <li *ngFor="let y of uploadedYears" (click)="selectUploadedYear(y, $event)">
+              {{ y }}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <button (click)="applyFilters()" class="filter-btn">Apply Filters</button>
+      <button (click)="resetFilters()" class="reset-btn">Reset</button>
+    </div>
+  </div>
+
   <div class="notices-grid" *ngIf="(notices?.length ?? 0) > 0">
     <div *ngFor="let notice of notices" class="notice-card">
-      
+
       <div class="notice-header">
         <h4>{{ notice?.title }}</h4>
       </div>

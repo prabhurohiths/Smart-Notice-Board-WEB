@@ -57,15 +57,13 @@ export class NoticeListComponent implements OnInit {
 
   ngOnInit() {
     const user = this.authService.getLoggedUser();
-
     // Load filters
     this.loadDepartments();
     this.loadYears();
-
+    this.loadTeachersAndAdmins();
     // Load notices based on role
     if (user?.roles?.[0]?.name === 'ADMIN' || user?.roles?.[0]?.name === 'TEACHER') {
       this.loadAllNotices();
-      this.loadTeachersAndAdmins();
     } else {
       this.loadStudentNotices();
     }
@@ -87,10 +85,6 @@ export class NoticeListComponent implements OnInit {
     });
   }
 
-  // ============================
-  // Existing Methods (unchanged)
-  // ============================
-
   get isAdmin(): boolean {
     const user = this.authService.getLoggedUser();
     return user?.roles?.some(r => r.name === 'ADMIN') || false;
@@ -111,7 +105,6 @@ export class NoticeListComponent implements OnInit {
     });
   }
 
-
   loadStudentNotices() {
     this.noticeService.getStudentNotices(this.currentPage, this.pageSize).subscribe({
       next: (res) => {
@@ -122,7 +115,6 @@ export class NoticeListComponent implements OnInit {
     });
   }
 
-
   loadTeachersAndAdmins() {
     this.noticeService.getAllTeachersAndAdmins().subscribe({
       next: (data) => (this.teachersAndAdmins = data),
@@ -130,10 +122,7 @@ export class NoticeListComponent implements OnInit {
     });
   }
 
-  // ============================
   // Filter Dropdown Logic
-  // ============================
-
   toggleUserDropdown() {
     this.userDropdownOpen = !this.userDropdownOpen;
     this.closeOtherDropdowns('user');
@@ -161,10 +150,7 @@ export class NoticeListComponent implements OnInit {
     if (openDropdown !== 'department') this.departmentDropdownOpen = false;
   }
 
-  // ============================
   // Selections
-  // ============================
-
   selectUser(username: string, event: MouseEvent) {
     event.stopPropagation();
     this.selectedUser = username;
@@ -189,46 +175,75 @@ export class NoticeListComponent implements OnInit {
     this.departmentDropdownOpen = false;
   }
 
-  // 🧩 Label for Year (fetched dynamically)
+  // Label for Year (fetched dynamically)
   getYearLabel(yearNumber: number): string {
     const found = this.years.find(y => y.yearNumber === yearNumber);
     return found ? found.yearName : '';
   }
 
-  // ============================
   // Filter Actions
-  // ============================
-
   applyFilters() {
-    this.filterCriteria = {
-      postedBy: this.selectedUser || '',
-      year: this.selectedYear !== undefined && this.selectedYear !== null   // send 0 for all years
-        ? this.selectedYear
-        : undefined,
-      uploadedYear: this.selectedUploadedYear || undefined,
-      department: this.selectedDepartment || undefined
-    };
+    const user = this.authService.getLoggedUser();
 
-    this.isFiltered = true; // mark as filtered
+    if (!this.isAdmin && !this.isTeacher) {
+      // Student filter — new API
+      this.filterCriteria = {
+        postedBy: this.selectedUser || '',
+        uploadedYear: this.selectedUploadedYear || undefined,
+        department: user?.department || undefined,
+        year: user?.year || undefined
+      };
 
-    this.noticeService
-      .filterNotices(
-        this.filterCriteria.postedBy,
-        this.filterCriteria.year,
-        this.filterCriteria.uploadedYear,
-        this.filterCriteria.department,
-        this.currentPage,
-        this.pageSize
-      )
-      .subscribe({
-        next: (res) => {
-          this.notices = res.notices;
-          this.totalPages = res.totalPages;
-        },
-        error: (err) => console.error('Error applying filters:', err)
-      });
+      this.isFiltered = true;
+
+      this.noticeService
+        .studentFilterNotices(
+          this.filterCriteria.postedBy,
+          this.filterCriteria.uploadedYear,
+          this.filterCriteria.department,
+          this.filterCriteria.year,
+          this.currentPage,
+          this.pageSize
+        )
+        .subscribe({
+          next: (res) => {
+            this.notices = res.notices;
+            this.totalPages = res.totalPages;
+          },
+          error: (err) => console.error('Error applying student filters:', err)
+        });
+
+    } else {
+      // Admin/Teacher same logic as before
+      this.filterCriteria = {
+        postedBy: this.selectedUser || '',
+        year: this.selectedYear !== undefined && this.selectedYear !== null
+          ? this.selectedYear
+          : undefined,
+        uploadedYear: this.selectedUploadedYear || undefined,
+        department: this.selectedDepartment || undefined
+      };
+
+      this.isFiltered = true;
+
+      this.noticeService
+        .filterNotices(
+          this.filterCriteria.postedBy,
+          this.filterCriteria.year,
+          this.filterCriteria.uploadedYear,
+          this.filterCriteria.department,
+          this.currentPage,
+          this.pageSize
+        )
+        .subscribe({
+          next: (res) => {
+            this.notices = res.notices;
+            this.totalPages = res.totalPages;
+          },
+          error: (err) => console.error('Error applying filters:', err)
+        });
+    }
   }
-
 
   resetFilters() {
     this.selectedUser = '';
@@ -245,7 +260,6 @@ export class NoticeListComponent implements OnInit {
     this.currentPage = 0;
     this.loadAllNotices();
   }
-
 
   canEditNotice(notice: Notice): boolean {
     const user = this.authService.getLoggedUser();
@@ -301,7 +315,11 @@ export class NoticeListComponent implements OnInit {
     this.currentPage = page;
 
     if (this.isFiltered) {
-      this.loadFilteredNotices();
+      if (this.isAdmin || this.isTeacher) {
+        this.loadFilteredNotices();
+      } else {
+        this.loadStudentFilteredNotices();
+      }
     } else if (this.isAdmin || this.isTeacher) {
       this.loadAllNotices();
     } else {
@@ -309,12 +327,17 @@ export class NoticeListComponent implements OnInit {
     }
   }
 
+
   nextPage() {
     if (this.currentPage < this.totalPages - 1) {
       this.currentPage++;
 
       if (this.isFiltered) {
-        this.loadFilteredNotices();
+        if (this.isAdmin || this.isTeacher) {
+          this.loadFilteredNotices();
+        } else {
+          this.loadStudentFilteredNotices();
+        }
       } else if (this.isAdmin || this.isTeacher) {
         this.loadAllNotices();
       } else {
@@ -322,13 +345,18 @@ export class NoticeListComponent implements OnInit {
       }
     }
   }
+
 
   previousPage() {
     if (this.currentPage > 0) {
       this.currentPage--;
 
       if (this.isFiltered) {
-        this.loadFilteredNotices();
+        if (this.isAdmin || this.isTeacher) {
+          this.loadFilteredNotices();
+        } else {
+          this.loadStudentFilteredNotices();
+        }
       } else if (this.isAdmin || this.isTeacher) {
         this.loadAllNotices();
       } else {
@@ -336,6 +364,7 @@ export class NoticeListComponent implements OnInit {
       }
     }
   }
+
   loadFilteredNotices() {
     this.noticeService
       .filterNotices(
@@ -355,5 +384,26 @@ export class NoticeListComponent implements OnInit {
       });
   }
 
+  loadStudentFilteredNotices() {
+    const user = this.authService.getLoggedUser();
+    if (!user) return;
+
+    this.noticeService
+      .studentFilterNotices(
+        this.filterCriteria.postedBy,
+        this.filterCriteria.uploadedYear,
+        user.department,
+        user.year,
+        this.currentPage,
+        this.pageSize
+      )
+      .subscribe({
+        next: (res) => {
+          this.notices = res.notices;
+          this.totalPages = res.totalPages;
+        },
+        error: (err) => console.error('Error fetching filtered student notices:', err)
+      });
+  }
 
 }
