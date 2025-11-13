@@ -102,7 +102,9 @@ export class NoticeService {
       .set('page', page.toString())
       .set('size', size.toString());
     if (postedBy) params = params.set('postedBy', postedBy);
-    if (year) params = params.set('year', year.toString());
+    if (year !== undefined && year !== null) { // send 0 for all years
+      params = params.set('year', year.toString());
+    }
     if (uploadedYear) params = params.set('uploadedYear', uploadedYear.toString());
     if (department) params = params.set('department', department);
 

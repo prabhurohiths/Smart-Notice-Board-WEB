@@ -202,7 +202,9 @@ export class NoticeListComponent implements OnInit {
   applyFilters() {
     this.filterCriteria = {
       postedBy: this.selectedUser || '',
-      year: this.selectedYear || undefined,
+      year: this.selectedYear !== undefined && this.selectedYear !== null   // send 0 for all years
+        ? this.selectedYear
+        : undefined,
       uploadedYear: this.selectedUploadedYear || undefined,
       department: this.selectedDepartment || undefined
     };
