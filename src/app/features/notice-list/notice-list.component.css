@@ -227,26 +227,26 @@
   border-radius: 16px;
   padding: 20px 24px;
   margin: 0 auto 40px auto;
-  max-width: 1200px;
+  max-width: 1250px;
   width: 95%;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
   animation: fadeIn 0.5s ease-out;
   position: relative;
-  overflow: visible; /* ✅ dropdowns visible */
+  overflow: visible;
+  z-index: 100; /* ✅ Higher z-index for filter section */
 }
 
-/* Filters in one line */
+/* 🔹 Filters in one line by default */
 .filter-row {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  flex-wrap: nowrap; /* ✅ stay in one row */
-  gap: 18px;
-  overflow: visible; /* ✅ allows dropdowns to display */
-  flex-shrink: 1;
+  flex-wrap: nowrap;
+  gap: 20px;
+  overflow: visible;
 }
 
-/* Form fields */
+/* 🔹 Each Filter Field */
 .form-group {
   display: flex;
   flex-direction: column;
@@ -255,6 +255,13 @@
   color: #4a5568;
   min-width: 160px;
   flex: 1 1 auto;
+  position: relative;
+  z-index: 1; /* ✅ Base z-index */
+}
+
+/* ✅ When dropdown is open, increase z-index of parent */
+.form-group:has(.dropdown-list) {
+  z-index: 1000;
 }
 
 /* Dropdown */
@@ -267,7 +274,7 @@
   width: 100%;
   transition: all 0.2s ease;
   position: relative;
-  z-index: 10;
+  z-index: 1;
 }
 
 .custom-dropdown:hover {
@@ -283,7 +290,7 @@
 /* Dropdown List */
 .dropdown-list {
   position: absolute;
-  top: calc(100% + 4px);
+  top: calc(100% + 6px);
   left: 0;
   width: 100%;
   background: white;
@@ -292,15 +299,16 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-  z-index: 99;
-  max-height: 200px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  z-index: 9999; /* ✅ Very high z-index for dropdown */
+  max-height: 220px;
   overflow-y: auto;
 }
 
 .dropdown-list li {
   padding: 10px 14px;
   transition: background 0.2s ease;
+  cursor: pointer;
 }
 
 .dropdown-list li:hover {
