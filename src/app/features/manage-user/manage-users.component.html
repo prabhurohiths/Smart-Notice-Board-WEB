@@ -13,8 +13,9 @@
             <th>Name</th>
             <th>Email</th>
             <th>Department</th>
+            <th>Year</th>
             <th>Role</th>
-            <th>Date of Birth</th>
+            <th>Mobile Number</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -27,6 +28,9 @@
             <td data-label="Department">
               <span class="badge">{{ u.department || 'NA' }}</span>
             </td>
+            <td data-label="Year">
+              <span class="badge">{{ u.year || 'NA' }}</span>
+            </td>
             <td data-label="Role">
               <span *ngIf="u.roles && u.roles.length > 0; else noRole" class="role-badge"
                 [ngClass]="getRoleClass(u.roles[0].name)">
@@ -34,8 +38,8 @@
               </span>
               <ng-template #noRole> - </ng-template>
             </td>
-            <td data-label="Date of Birth">
-              {{ u.dateOfBirth ? (u.dateOfBirth | date: 'mediumDate') : '-' }}
+            <td data-label="Mobile Number">
+              {{ u.mobileNumber || '-' }}
             </td>
             <td data-label="Actions" class="actions">
               <button class="edit-btn" (click)="editUser(u)">✏️ Edit</button>
