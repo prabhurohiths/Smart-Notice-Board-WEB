@@ -6,6 +6,7 @@ import { DepartmentService } from '../../core/services/department.service';
 import { YearService } from '../../core/services/year.service';
 import { Department } from '../../core/models/department.model';
 import { Year } from '../../core/models/year.model';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-notice-edit',
@@ -31,7 +32,7 @@ export class NoticeEditComponent implements OnInit {
   previewUrls: string[] = [];
   selectedFiles: File[] = [];
 
-  // ✅ Dropdown states
+  // Dropdown states
   departmentDropdownOpen = false;
   yearDropdownOpen = false;
 
@@ -55,7 +56,7 @@ export class NoticeEditComponent implements OnInit {
     this.loadYears();
   }
 
-  // ✅ Load dynamic data
+  // Load dynamic data
   loadDepartments() {
     this.departmentService.getAllDepartments().subscribe({
       next: (data) => this.departments = data,
@@ -70,7 +71,7 @@ export class NoticeEditComponent implements OnInit {
     });
   }
 
-  // ✅ Load existing notice
+  // Load existing notice
   loadNoticeData(id: number) {
     this.noticeService.getNoticeById(id).subscribe({
       next: (data) => {
@@ -84,7 +85,7 @@ export class NoticeEditComponent implements OnInit {
     });
   }
 
-  // ✅ Dropdown control
+  // Dropdown control
   toggleDepartmentDropdown() {
     this.departmentDropdownOpen = !this.departmentDropdownOpen;
     this.yearDropdownOpen = false;
@@ -121,7 +122,7 @@ export class NoticeEditComponent implements OnInit {
     }
   }
 
-  // ✅ File upload
+  // File upload
   onFilesSelected(event: any) {
     const newFiles = Array.from(event.target.files as FileList) as File[];
     this.selectedFiles = [...this.selectedFiles, ...newFiles];
@@ -155,12 +156,12 @@ export class NoticeEditComponent implements OnInit {
     this.success = "";
     this.error = "";
 
-    if (!this.notice.id) {
+    const id = this.notice.id;
+
+    if (!id) {
       this.error = "Invalid notice.";
       return;
     }
-
-    //REQUIRED FIELD CHECKS
 
     // Title
     if (!this.notice.title || !this.notice.title.trim()) {
@@ -192,18 +193,48 @@ export class NoticeEditComponent implements OnInit {
       return;
     }
 
-    //Upadate Notice API
-    this.noticeService
-      .updateNoticeWithImages(this.notice.id, this.notice, this.selectedFiles)
-      .subscribe({
-        next: () => {
-          this.success = "✅ Notice updated successfully!";
-          setTimeout(() => this.router.navigate(['/notices']), 800);
-        },
-        error: (err) => {
-          this.error = err.error?.message || "❌ Error updating notice.";
-        }
-      });
+    Swal.fire({
+      title: "Confirm Update",
+      text: "Are you sure you want to update this notice?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Update",
+      cancelButtonText: "Cancel"
+    }).then((result) => {
+
+      if (!result.isConfirmed) {
+        Swal.fire({
+          title: "Cancelled",
+          text: "Notice update cancelled.",
+          icon: "info"
+        });
+        return;
+      }
+
+      this.noticeService
+        .updateNoticeWithImages(id, this.notice, this.selectedFiles)
+        .subscribe({
+          next: () => {
+            Swal.fire({
+              title: "Updated!",
+              text: "The notice has been updated successfully.",
+              icon: "success"
+            });
+
+            setTimeout(() => this.router.navigate(['/notices']), 600);
+          },
+          error: (err) => {
+            Swal.fire({
+              title: "Error!",
+              text: err.error?.message || "Failed to update notice.",
+              icon: "error"
+            });
+          }
+        });
+
+    });
   }
 
 }
