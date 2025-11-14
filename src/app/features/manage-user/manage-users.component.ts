@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../core/models/user.model';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-manage-users',
@@ -56,15 +57,53 @@ export class ManageUsersComponent implements OnInit {
     this.router.navigate(['/edit-user', user.id]);
   }
 
+
   deleteUser(id: number | undefined) {
     if (!id) return;
-    if (confirm('Are you sure you want to delete this user?')) {
-      this.userService.deleteUser(id).subscribe({
-        next: () => this.loadUsers(),
-        error: (err) => console.error('Error deleting user:', err)
-      });
-    }
+
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This user will be permanently deleted along with all notices posted by the user.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete",
+      cancelButtonText: "Cancel"
+    }).then((result) => {
+      if (result.isConfirmed) {
+
+        this.userService.deleteUser(id).subscribe({
+          next: () => {
+            Swal.fire({
+              title: "Deleted!",
+              text: "User has been removed successfully.",
+              icon: "success",
+              confirmButtonColor: "#3085d6"
+            });
+            this.loadUsers();
+          },
+          error: (err) => {
+            Swal.fire({
+              title: "Error!",
+              text: err.error?.message || "Failed to delete user.",
+              icon: "error",
+              confirmButtonColor: "#3085d6"
+            });
+          }
+        });
+
+      } else {
+        Swal.fire({
+          title: "Cancelled",
+          text: "User deletion cancelled.",
+          icon: "info",
+          confirmButtonColor: "#3085d6"
+        });
+      }
+    });
   }
+
 
   getRoleClass(role: string): string {
     switch (role) {

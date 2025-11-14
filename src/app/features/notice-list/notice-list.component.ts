@@ -7,6 +7,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { DepartmentService } from '../../core/services/department.service';
 import { NoticeService } from '../../core/services/notice.service';
 import { YearService } from '../../core/services/year.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-notice-list',
@@ -278,17 +279,48 @@ export class NoticeListComponent implements OnInit {
     const user = this.authService.getLoggedUser();
     if (!user) return;
 
-    if (confirm('Are you sure you want to delete this notice?')) {
-      this.noticeService.deleteNotice(noticeId, user.id).subscribe({
-        next: () => {
-          this.notices = this.notices.filter(n => n.id !== noticeId);
-          alert('Notice deleted successfully!');
-        },
-        error: (err) => {
-          alert(err.error?.message || "You don't have permission to delete this notice.");
-        }
-      });
-    }
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to delete this notice?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Call API to delete
+        this.noticeService.deleteNotice(noticeId, user.id).subscribe({
+          next: () => {
+            this.notices = this.notices.filter(n => n.id !== noticeId);
+
+            Swal.fire({
+              title: "Deleted!",
+              text: "The notice has been deleted.",
+              icon: "success",
+              confirmButtonColor: "#3085d6"
+            });
+          },
+          error: (err) => {
+            Swal.fire({
+              title: "Error!",
+              text: err.error?.message || "You don't have permission to delete this notice.",
+              icon: "error",
+              confirmButtonColor: "#3085d6"
+            });
+          }
+        });
+
+      } else {
+        Swal.fire({
+          title: "Cancelled",
+          text: "The notice was not deleted.",
+          icon: "info",
+          confirmButtonColor: "#3085d6"
+        });
+      }
+    });
   }
 
   canDeleteNotice(notice: Notice): boolean {
