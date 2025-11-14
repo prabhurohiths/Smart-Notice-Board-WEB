@@ -169,24 +169,79 @@ export class EditUserComponent implements OnInit {
     }
   }
 
+
   updateUser() {
-    // Validate basic fields
-    if (!this.user.username || !this.selectedRole) {
-      this.error = 'Please fill all required fields.';
-      this.success = '';
+    this.success = "";
+    this.error = "";
+
+    //BASIC FIELD VALIDATION
+
+    // Username
+    if (!this.user.username?.trim()) {
+      this.error = "Username is required.";
       return;
     }
 
-    // Validate Department/Year for Students only
-    const role = this.selectedRole;
-    if (role === 'STUDENT') {
-      if (!this.user.department || !this.user.year) {
-        this.error = 'Department and Year are required for Student role.';
-        this.success = '';
+    // Full Name
+    if (!this.user.name?.trim()) {
+      this.error = "Full name is required.";
+      return;
+    }
+
+    // Role
+    if (!this.selectedRole) {
+      this.error = "Role selection is required.";
+      return;
+    }
+
+    //ROLE-BASED VALIDATION
+    if (this.selectedRole === "STUDENT") {
+      if (!this.selectedDepartment) {
+        this.error = "Department is required for students.";
+        return;
+      }
+      if (!this.selectedYearName) {
+        this.error = "Year is required for students.";
         return;
       }
     }
 
+    //EMAIL VALIDATION
+    if (!this.user.gmail?.trim()) {
+      this.error = "Email is required.";
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(this.user.gmail)) {
+      this.error = "Invalid email format.";
+      return;
+    }
+
+    //MOBILE VALIDATION
+    if (!this.user.mobileNumber?.trim()) {
+      this.error = "Mobile number is required.";
+      return;
+    }
+    const mobileRegex = /^[0-9]{10}$/;
+    if (!mobileRegex.test(this.user.mobileNumber)) {
+      this.error = "Mobile number must be a 10-digit number.";
+      return;
+    }
+
+    //DATE OF BIRTH VALIDATION
+    if (!this.user.dateOfBirth?.trim()) {
+      this.error = "Date of birth is required.";
+      return;
+    }
+    const dob = new Date(this.user.dateOfBirth);
+    const today = new Date();
+    const age = today.getFullYear() - dob.getFullYear();
+    if (age < 15) {
+      this.error = "User must be at least 15 years old.";
+      return;
+    }
+
+    //Update User API
     this.userService.updateUser(this.user).subscribe({
       next: () => {
         this.success = '✅ User updated successfully!';

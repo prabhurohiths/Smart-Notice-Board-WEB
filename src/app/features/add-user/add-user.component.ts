@@ -172,51 +172,114 @@ export class AddUserComponent implements OnInit {
     }
   }
 
-  // Create user
+
   addUser() {
-    // Basic validations (common to all roles)
-    if (!this.user.username || !this.tempPassword || !this.confirmPassword || !this.user.roles[0].name) {
-      this.error = 'Please fill all required fields.';
-      this.success = '';
+    this.success = "";
+    this.error = "";
+
+    //BASIC FIELD VALIDATION
+
+    // Username
+    if (!this.user.username?.trim()) {
+      this.error = "Username is required.";
       return;
     }
 
-    // Role-based validation
-    const role = this.user.roles[0].name;
-    if (role === 'STUDENT') {
-      if (!this.user.department || !this.user.year) {
-        this.error = 'Please select department and year for students.';
-        this.success = '';
+    // Full Name
+    if (!this.user.name?.trim()) {
+      this.error = "Full name is required.";
+      return;
+    }
+
+    // Passwords
+    if (!this.tempPassword?.trim()) {
+      this.error = "Temporary password is required.";
+      return;
+    }
+
+    if (!this.confirmPassword?.trim()) {
+      this.error = "Confirm password is required.";
+      return;
+    }
+
+    // Password Match
+    if (this.tempPassword !== this.confirmPassword) {
+      this.error = "Passwords do not match.";
+      return;
+    }
+
+    // Role
+    if (!this.selectedRole) {
+      this.error = "Role selection is required.";
+      return;
+    }
+
+    // Username already exists
+    if (this.usernameExists === true) {
+      this.error = "This username is already taken.";
+      return;
+    }
+
+    //ROLE-BASED VALIDATION
+    if (this.selectedRole === "STUDENT") {
+      if (!this.selectedDepartment) {
+        this.error = "Department is required for students.";
+        return;
+      }
+      if (!this.selectedYearName) {
+        this.error = "Year is required for students.";
         return;
       }
     }
 
-    // Username validation
-    if (this.usernameExists === true) {
-      this.error = 'This username is already taken.';
+    //EMAIL VALIDATION
+    if (!this.user.gmail?.trim()) {
+      this.error = "Email is required.";
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(this.user.gmail)) {
+      this.error = "Invalid email format.";
       return;
     }
 
-    // Password match check
-    if (this.tempPassword !== this.confirmPassword) {
-      this.error = 'Passwords do not match.';
-      this.success = '';
+    //MOBILE VALIDATION
+    if (!this.user.mobileNumber?.trim()) {
+      this.error = "Mobile number is required.";
+      return;
+    }
+    const mobileRegex = /^[0-9]{10}$/;
+    if (!mobileRegex.test(this.user.mobileNumber)) {
+      this.error = "Mobile number must be a 10-digit number.";
+      return;
+    }
+
+    //DATE OF BIRTH VALIDATION
+    if (!this.user.dateOfBirth?.trim()) {
+      this.error = "Date of birth is required.";
+      return;
+    }
+    const dob = new Date(this.user.dateOfBirth);
+    const today = new Date();
+    const age = today.getFullYear() - dob.getFullYear();
+    if (age < 15) {
+      this.error = "User must be at least 15 years old.";
       return;
     }
 
     // Encrypt password
     this.user.password = this.userService.encryptPassword(this.tempPassword);
 
-    // Submit request
+    //Register User API
     this.userService.registerUser(this.user).subscribe({
       next: () => {
-        this.success = '✅ User added successfully!';
-        this.error = '';
-        setTimeout(() => this.router.navigate(['/manage-users']), 1500);
+        this.success = "✅ User added successfully!";
+        this.error = "";
+        setTimeout(() => this.router.navigate(['/manage-users']), 1000);
       },
       error: (err) => {
-        this.error = err.error?.message || '❌ Error adding user.';
-        this.success = '';
+        this.error = err.error?.message || "❌ Failed to add user.";
+        this.success = "";
       }
     });
   }
