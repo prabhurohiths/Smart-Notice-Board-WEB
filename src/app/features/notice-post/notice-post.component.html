@@ -20,7 +20,7 @@
       <div class="form-row">
         <!-- Department Dropdown -->
         <div class="form-group">
-          <label>Department</label>
+          <label>Department *</label>
           <div class="custom-dropdown" (click)="toggleDepartmentDropdown()">
             <span>{{ notice.department || 'Select Department' }}</span>
             <ul *ngIf="departmentDropdownOpen" class="dropdown-list">
@@ -34,7 +34,7 @@
 
         <!-- Year Dropdown -->
         <div class="form-group">
-          <label>Year</label>
+          <label>Year *</label>
           <div class="custom-dropdown" (click)="toggleYearDropdown()">
             <span>
               {{ notice.year !== null && notice.year !== undefined ? getYearLabel(notice.year) : 'Select Year' }}

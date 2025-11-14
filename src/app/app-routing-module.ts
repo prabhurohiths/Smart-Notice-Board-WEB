@@ -15,7 +15,7 @@ import { EditUserComponent } from './features/edit-user/edit-user.component';
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'reset-password', component: ResetPasswordComponent },
+  { path: 'reset-password', component: ResetPasswordComponent,  canActivate: [AuthGuard]},
   {
     path: '',
     component: DashbLayoutComponentComponent,
