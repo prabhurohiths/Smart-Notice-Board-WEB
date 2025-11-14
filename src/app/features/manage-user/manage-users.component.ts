@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../../core/services/user.service';
-import { User } from '../../core/models/user.model';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { User } from '../../core/models/user.model';
+import { UserService } from '../../core/services/user.service';
 
 @Component({
   selector: 'app-manage-users',
@@ -57,29 +57,74 @@ export class ManageUsersComponent implements OnInit {
     this.router.navigate(['/edit-user', user.id]);
   }
 
-
   deleteUser(id: number | undefined) {
     if (!id) return;
 
+    // Find the user to delete
+    const userToDelete = this.users.find(u => u.id === id);
+    if (!userToDelete) {
+      Swal.fire("Error", "User not found.", "error");
+      return;
+    }
+
+    const username = userToDelete.username; // Username to match
+
+    // FIRST CONFIRMATION
     Swal.fire({
       title: "Are you sure?",
-      text: "This user will be permanently deleted along with all notices posted by the user.",
+      text: `User "${username}" will be permanently deleted along with all notices posted by the user.`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete",
+      confirmButtonText: "Yes, Continue",
       cancelButtonText: "Cancel"
-    }).then((result) => {
-      if (result.isConfirmed) {
+    }).then((first) => {
 
+      if (!first.isConfirmed) {
+        Swal.fire({
+          title: "Cancelled",
+          text: "User deletion cancelled.",
+          icon: "info"
+        });
+        return;
+      }
+
+      // SECOND CONFIRMATION — TYPE THE USERNAME
+      Swal.fire({
+        title: "Final Confirmation",
+        html: `To confirm deletion, type <b>${username}</b> below.`,
+        input: "text",
+        inputPlaceholder: `Type ${username} here`,
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Delete User",
+        cancelButtonText: "Cancel",
+        inputValidator: (value) => {
+          if (value !== username) {
+            return `You must type "${username}" exactly to confirm.`;
+          }
+          return null;
+        }
+      }).then((second) => {
+
+        if (!second.isConfirmed) {
+          Swal.fire({
+            title: "Cancelled",
+            text: "User deletion cancelled.",
+            icon: "info"
+          });
+          return;
+        }
+
+        // API CALL
         this.userService.deleteUser(id).subscribe({
           next: () => {
             Swal.fire({
               title: "Deleted!",
-              text: "User has been removed successfully.",
-              icon: "success",
-              confirmButtonColor: "#3085d6"
+              text: `User "${username}" has been permanently removed.`,
+              icon: "success"
             });
             this.loadUsers();
           },
@@ -87,23 +132,15 @@ export class ManageUsersComponent implements OnInit {
             Swal.fire({
               title: "Error!",
               text: err.error?.message || "Failed to delete user.",
-              icon: "error",
-              confirmButtonColor: "#3085d6"
+              icon: "error"
             });
           }
         });
 
-      } else {
-        Swal.fire({
-          title: "Cancelled",
-          text: "User deletion cancelled.",
-          icon: "info",
-          confirmButtonColor: "#3085d6"
-        });
-      }
+      });
+
     });
   }
-
 
   getRoleClass(role: string): string {
     switch (role) {

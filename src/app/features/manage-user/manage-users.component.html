@@ -28,9 +28,8 @@
               <span class="badge">{{ u.department || 'NA' }}</span>
             </td>
             <td data-label="Role">
-              <span *ngIf="u.roles && u.roles.length > 0; else noRole"
-                    class="role-badge"
-                    [ngClass]="getRoleClass(u.roles[0].name)">
+              <span *ngIf="u.roles && u.roles.length > 0; else noRole" class="role-badge"
+                [ngClass]="getRoleClass(u.roles[0].name)">
                 {{ u.roles[0].name }}
               </span>
               <ng-template #noRole> - </ng-template>
@@ -57,10 +56,8 @@
   <div *ngIf="totalPages > 1" class="pagination-container">
     <button class="page-btn" [disabled]="currentPage === 0" (click)="previousPage()">⬅ Prev</button>
 
-    <button *ngFor="let page of [].constructor(totalPages); let i = index"
-            class="page-number"
-            [class.active]="i === currentPage"
-            (click)="goToPage(i)">
+    <button *ngFor="let page of [].constructor(totalPages); let i = index" class="page-number"
+      [class.active]="i === currentPage" (click)="goToPage(i)">
       {{ i + 1 }}
     </button>
 
