@@ -41,7 +41,7 @@ export class NoticeEditComponent implements OnInit {
     private yearService: YearService,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -150,18 +150,60 @@ export class NoticeEditComponent implements OnInit {
     }
   }
 
-  // ✅ Update notice
+  // Update notice
   updateNotice() {
-    if (!this.notice.id) return;
+    this.success = "";
+    this.error = "";
 
-    this.noticeService.updateNoticeWithImages(this.notice.id, this.notice, this.selectedFiles).subscribe({
-      next: () => {
-        this.success = '✅ Notice updated successfully!';
-        setTimeout(() => this.router.navigate(['/notices']), 1000);
-      },
-      error: (err) => {
-        this.error = err.error?.message || '❌ Error updating notice.';
-      }
-    });
+    if (!this.notice.id) {
+      this.error = "Invalid notice.";
+      return;
+    }
+
+    //REQUIRED FIELD CHECKS
+
+    // Title
+    if (!this.notice.title || !this.notice.title.trim()) {
+      this.error = "Title is required.";
+      return;
+    }
+    this.notice.title = this.notice.title.trim();
+
+    // Description
+    if (!this.notice.description || !this.notice.description.trim()) {
+      this.error = "Description is required.";
+      return;
+    }
+    this.notice.description = this.notice.description.trim();
+
+    // Department
+    if (!this.notice.department || !this.notice.department.trim()) {
+      this.error = "Department is required.";
+      return;
+    }
+
+    // Year
+    if (
+      this.notice.year === null ||
+      this.notice.year === undefined ||
+      isNaN(this.notice.year)
+    ) {
+      this.error = "Year is required.";
+      return;
+    }
+
+    //Upadate Notice API
+    this.noticeService
+      .updateNoticeWithImages(this.notice.id, this.notice, this.selectedFiles)
+      .subscribe({
+        next: () => {
+          this.success = "✅ Notice updated successfully!";
+          setTimeout(() => this.router.navigate(['/notices']), 800);
+        },
+        error: (err) => {
+          this.error = err.error?.message || "❌ Error updating notice.";
+        }
+      });
   }
+
 }

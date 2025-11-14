@@ -35,7 +35,7 @@ export class NoticePostComponent implements OnInit {
     private yearService: YearService,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadDepartments();
@@ -74,18 +74,62 @@ export class NoticePostComponent implements OnInit {
   }
 
   postNotice() {
+    this.success = "";
+    this.error = "";
+
+    //REQUIRED FIELD CHECKS
+
+    // Title
+    if (!this.notice.title || !this.notice.title.trim()) {
+      this.error = "Title is required.";
+      return;
+    }
+    this.notice.title = this.notice.title.trim();
+
+    // Description
+    if (!this.notice.description || !this.notice.description.trim()) {
+      this.error = "Description is required.";
+      return;
+    }
+    this.notice.description = this.notice.description.trim();
+
+    // Department
+    if (!this.notice.department || !this.notice.department.trim()) {
+      this.error = "Department is required.";
+      return;
+    }
+
+    // Year
+    if (
+      this.notice.year === null ||
+      this.notice.year === undefined ||
+      isNaN(this.notice.year)
+    ) {
+      this.error = "Year is required.";
+      return;
+    }
+
+    //PREPARE API CALL
     const user = this.authService.getLoggedUser();
     const postedById = user?.id;
 
-    this.noticeService.postNotice(this.notice, postedById, this.selectedFiles).subscribe({
-      next: () => {
-        this.success = 'Notice posted successfully!';
-        this.router.navigate(['/notices']);
-      },
-      error: (err) => {
-        this.error = err.error?.message || 'Error posting notice';
-      }
-    });
+    if (!postedById) {
+      this.error = "Unable to identify user.";
+      return;
+    }
+
+    //Create Notice API
+    this.noticeService
+      .postNotice(this.notice, postedById, this.selectedFiles)
+      .subscribe({
+        next: () => {
+          this.success = "Notice posted successfully!";
+          setTimeout(() => this.router.navigate(['/notices']), 500);
+        },
+        error: (err) => {
+          this.error = err.error?.message || "Error posting notice.";
+        }
+      });
   }
 
   // Dropdown controls
