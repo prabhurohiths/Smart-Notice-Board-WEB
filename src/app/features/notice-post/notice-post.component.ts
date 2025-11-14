@@ -42,7 +42,7 @@ export class NoticePostComponent implements OnInit {
     this.loadYears();
   }
 
-  // ✅ Load from backend
+  // Load from backend
   loadDepartments() {
     this.departmentService.getAllDepartments().subscribe({
       next: (data) => this.departments = data,

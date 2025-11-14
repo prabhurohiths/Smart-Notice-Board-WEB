@@ -1,7 +1,3 @@
-/* ==============================
-   🔹 NOTICE LIST PAGE STYLING
-   ============================== */
-
 .notice-container {
   min-height: calc(100vh - 70px);
   background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
@@ -25,9 +21,7 @@
   font-size: 16px;
 }
 
-/* ==============================
-   🔹 NOTICE GRID & CARDS
-   ============================== */
+/* NOTICE GRID & CARDS */
 
 .notices-grid {
   display: grid;
@@ -71,9 +65,7 @@
   margin-bottom: 12px;
 }
 
-/* ==============================
-   🔹 BADGES
-   ============================== */
+/* BADGES */
 
 .badge-container {
   display: flex;
@@ -106,9 +98,7 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* ==============================
-   🔹 NOTICE META & IMAGES
-   ============================== */
+/* NOTICE META & IMAGES */
 
 .notice-meta {
   color: #718096;
@@ -149,9 +139,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* ==============================
-   🔹 ACTION BUTTONS
-   ============================== */
+/* ACTION BUTTONS */
 
 .notice-action-btn {
   width: 100%;
@@ -196,9 +184,7 @@
   margin-top: 8px;
 }
 
-/* ==============================
-   🔹 NO NOTICES
-   ============================== */
+/* NO NOTICES */
 
 .no-notices {
   text-align: center;
@@ -218,9 +204,7 @@
   opacity: 0.5;
 }
 
-/* ==============================
-   🔹 FILTER SECTION (FIXED)
-   ============================== */
+/* FILTER SECTION (FIXED) */
 
 .filter-section {
   background: white;
@@ -236,7 +220,7 @@
   z-index: 100; /* ✅ Higher z-index for filter section */
 }
 
-/* 🔹 Filters in one line by default */
+/* Filters in one line by default */
 .filter-row {
   display: flex;
   align-items: flex-end;
@@ -246,7 +230,7 @@
   overflow: visible;
 }
 
-/* 🔹 Each Filter Field */
+/* Each Filter Field */
 .form-group {
   display: flex;
   flex-direction: column;
@@ -259,7 +243,7 @@
   z-index: 1; /* ✅ Base z-index */
 }
 
-/* ✅ When dropdown is open, increase z-index of parent */
+/* When dropdown is open, increase z-index of parent */
 .form-group:has(.dropdown-list) {
   z-index: 1000;
 }
@@ -368,9 +352,7 @@
   }
 }
 
-/* ==============================
-   🔹 PAGINATION
-   ============================== */
+/* PAGINATION */
 
 .pagination-container {
   display: flex;
@@ -411,10 +393,6 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
-
-/* ==============================
-   🔹 ANIMATIONS & RESPONSIVENESS
-   ============================== */
 
 @keyframes fadeIn {
   from {
