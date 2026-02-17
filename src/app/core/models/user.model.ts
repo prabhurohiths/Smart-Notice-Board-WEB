@@ -14,5 +14,6 @@ export interface User {
   year?: number;
   section?: string;
   token?: string;
+  active?: boolean;
   firstLogin?: boolean;
 }

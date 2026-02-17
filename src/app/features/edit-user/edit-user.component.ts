@@ -55,7 +55,7 @@ export class EditUserComponent implements OnInit {
     }).subscribe({
       next: ({ user, departments, years, roles }) => {
         this.user = user;
-        this.departments = departments;
+        this.departments = departments.filter(d => d.name.toUpperCase() !== 'ALL');
         this.years = years.filter(y => y.yearName.toUpperCase() !== 'ALL' && y.yearNumber !== 0);
         this.roles = roles;
 
@@ -246,7 +246,7 @@ export class EditUserComponent implements OnInit {
       next: () => {
         this.success = '✅ User updated successfully!';
         this.error = '';
-        setTimeout(() => this.router.navigate(['/manage-users']), 200);
+        setTimeout(() => this.router.navigate(['/app/manage-users']), 200);
       },
       error: () => {
         this.error = '❌ Failed to update user.';

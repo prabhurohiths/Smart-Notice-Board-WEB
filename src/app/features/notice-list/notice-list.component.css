@@ -139,8 +139,31 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* ACTION BUTTONS */
+/* PDF Preview */
+.pdf-preview-box {
+  width: 100%;
+  height: 120px;            /* SAME as .notice-image preview*/
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
 
+.pdf-preview-box:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.pdf-icon {
+  width: 60px;             /* Icon centered inside box */
+  height: 60px;
+}
+
+/* ACTION BUTTONS */
 .notice-action-btn {
   width: 100%;
   margin-top: 12px;
@@ -204,7 +227,7 @@
   opacity: 0.5;
 }
 
-/* FILTER SECTION (FIXED) */
+/* FILTER SECTION */
 
 .filter-section {
   background: white;
@@ -217,7 +240,7 @@
   animation: fadeIn 0.5s ease-out;
   position: relative;
   overflow: visible;
-  z-index: 100; /* ✅ Higher z-index for filter section */
+  z-index: 100; /* Higher z-index for filter section */
 }
 
 /* Filters in one line by default */
@@ -240,7 +263,7 @@
   min-width: 160px;
   flex: 1 1 auto;
   position: relative;
-  z-index: 1; /* ✅ Base z-index */
+  z-index: 1; /* Base z-index */
 }
 
 /* When dropdown is open, increase z-index of parent */
@@ -284,7 +307,7 @@
   padding: 0;
   margin: 0;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  z-index: 9999; /* ✅ Very high z-index for dropdown */
+  z-index: 9999; /* Very high z-index for dropdown */
   max-height: 220px;
   overflow-y: auto;
 }
@@ -298,6 +321,40 @@
 .dropdown-list li:hover {
   background-color: #edf2f7;
   color: #2d3748;
+}
+
+.badge-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.expired-badge {
+  background: #ffe4e6;
+  color: #b91c1c;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.expiring-soon-badge {
+  background: #fff7e6;
+  color: #d97706;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+/* For expired Notice */
+.expired-card {
+  background: #fff1f1;
+  border-left: 5px solid #b91c1c;
+  filter: grayscale(0.2) brightness(0.95);
+  box-shadow: 0 3px 10px rgba(185, 28, 28, 0.2);
+  transform: scale(0.98);
 }
 
 /* Buttons */

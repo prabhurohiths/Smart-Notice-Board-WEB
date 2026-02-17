@@ -85,7 +85,7 @@ export class AuthInterceptor implements HttpInterceptor {
     console.log('⚡ Refreshing token with refreshToken:', refreshToken);
 
     return this.http.post<AuthResponse>(
-      `${this.authService.basePath}/auth/refresh`,
+      `${this.authService.basePath}user/refreshAccessToken`,
       { refreshToken } // backend expects body with refreshToken
     );
   }

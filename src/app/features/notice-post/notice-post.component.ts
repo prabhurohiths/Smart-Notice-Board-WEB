@@ -1,11 +1,11 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Notice } from '../../core/models/notice.model';
-import { NoticeService } from '../../core/services/notice.service';
-import { AuthService } from '../../core/services/auth.service';
 import { Department } from '../../core/models/department.model';
+import { Notice } from '../../core/models/notice.model';
 import { Year } from '../../core/models/year.model';
+import { AuthService } from '../../core/services/auth.service';
 import { DepartmentService } from '../../core/services/department.service';
+import { NoticeService } from '../../core/services/notice.service';
 import { YearService } from '../../core/services/year.service';
 
 @Component({
@@ -16,7 +16,7 @@ import { YearService } from '../../core/services/year.service';
 })
 export class NoticePostComponent implements OnInit {
 
-  notice: Notice = { title: '', description: '', department: '', year: null as any };
+  notice: Notice = { title: '', description: '', department: '', year: null as any, expiryDate: '' };
   selectedFiles: File[] = [];
   previewUrls: string[] = [];
   success = '';
@@ -28,6 +28,7 @@ export class NoticePostComponent implements OnInit {
 
   departments: Department[] = [];
   years: Year[] = [];
+  today = new Date().toISOString().split('T')[0];
 
   constructor(
     private noticeService: NoticeService,
@@ -59,13 +60,58 @@ export class NoticePostComponent implements OnInit {
 
   onFilesSelected(event: any) {
     const newFiles = Array.from(event.target.files as FileList);
-    this.selectedFiles = [...this.selectedFiles, ...newFiles];
-    newFiles.forEach(file => {
-      const reader = new FileReader();
-      reader.onload = (e: any) => this.previewUrls.push(e.target.result);
-      reader.readAsDataURL(file);
+
+    newFiles.forEach((file: File) => {
+      this.selectedFiles.push(file);
+
+      // If image → show image preview
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (e: any) => this.previewUrls.push(e.target.result);
+        reader.readAsDataURL(file);
+      }
+      // If PDF → generate object URL
+      else if (file.type === 'application/pdf') {
+        const url = URL.createObjectURL(file);  // 👈 ADD THIS HERE
+        this.previewUrls.push(url);
+      }
     });
+
+    // Clear input
     event.target.value = '';
+  }
+
+  openPDF(file: any) {
+    // CASE 1: Already a Blob URL (from new uploaded file)
+    if (typeof file === 'string' && file.startsWith('blob:')) {
+      window.open(file, '_blank');
+      return;
+    }
+
+    // CASE 2: Base64 PDF from backend
+    if (typeof file === 'string' && file.startsWith('data:application/pdf')) {
+      const base64Data = file.split(',')[1];
+      const byteCharacters = atob(base64Data);
+      const byteNumbers = new Array(byteCharacters.length);
+
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: 'application/pdf' });
+      const blobUrl = URL.createObjectURL(blob);
+      window.open(blobUrl, '_blank');
+      return;
+    }
+
+    // CASE 3: File object (File from input)
+    if (file instanceof File) {
+      const url = URL.createObjectURL(file);
+      window.open(url, '_blank');
+      return;
+    }
+    console.warn('Unsupported PDF format:', file);
   }
 
   removeImage(index: number) {
@@ -99,6 +145,17 @@ export class NoticePostComponent implements OnInit {
       return;
     }
 
+    // Expiry Date
+    if (!this.notice.expiryDate) {
+      this.error = "Expiry date is required.";
+      return;
+    }
+    const today = new Date().toISOString().split('T')[0];
+    if (this.notice.expiryDate < today) {
+      this.error = "Expiry date cannot be in the past.";
+      return;
+    }
+
     // Year
     if (
       this.notice.year === null ||
@@ -124,7 +181,7 @@ export class NoticePostComponent implements OnInit {
       .subscribe({
         next: () => {
           this.success = "Notice posted successfully!";
-          setTimeout(() => this.router.navigate(['/notices']), 500);
+          setTimeout(() => this.router.navigate(['/app/notices']), 500);
         },
         error: (err) => {
           this.error = err.error?.message || "Error posting notice.";

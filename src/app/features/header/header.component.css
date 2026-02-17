@@ -1,102 +1,317 @@
 /* header.component.css */
+
 .navbar {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 16px 32px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-bottom: none;
   position: sticky;
   top: 0;
   z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.navbar-brand {
-  color: white;
-  font-size: 24px;
-  font-weight: 700;
-  text-decoration: none;
+.navbar-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 70px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Brand Section */
+.brand-section {
   display: flex;
   align-items: center;
-  transition: opacity 0.3s ease;
 }
 
-.navbar-brand:hover {
-  opacity: 0.9;
-}
-
-.navbar-actions {
+.brand-logo {
   display: flex;
+  align-items: center;
   gap: 12px;
-  align-items: center;
+  cursor: pointer;
 }
 
-.btn {
-  padding: 10px 24px;
-  border: 2px solid white;
-  background: transparent;
-  color: white;
-  border-radius: 8px;
+.logo-svg {
+  width: 36px;
+  height: 36px;
+  color: #ffffff;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.brand-subtitle {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* Desktop Navigation */
+.nav-menu-desktop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 1);
+  border-radius: 10px;
+  color: #667eea;
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  white-space: nowrap;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.btn:hover {
-  background: white;
-  color: #667eea;
+.nav-link:hover {
+  background: #ffffff;
+  color: #5a67d8;
+  border-color: #ffffff;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
-.btn:active {
+.nav-link:active {
   transform: translateY(0);
 }
 
-.btn-logout {
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
+.nav-icon {
+  width: 20px;
+  height: 20px;
 }
 
-.btn-logout:hover {
+.divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.3);
+  margin: 0 4px;
+}
+
+.logout-link {
+  color: #ffffff;
   background: #ef4444;
   border-color: #ef4444;
-  color: white;
 }
 
-/* Responsive Design */
+.logout-link:hover {
+  background: #dc2626;
+  color: #ffffff;
+  border-color: #dc2626;
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+}
+
+/* Mobile Toggle */
+.mobile-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.menu-bar {
+  width: 100%;
+  height: 3px;
+  background: #ffffff;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.menu-bar.open:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.menu-bar.open:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-bar.open:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Mobile Overlay */
+.mobile-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 998;
+}
+
+.mobile-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Mobile Sidebar */
+.mobile-sidebar {
+  position: fixed;
+  top: 0;
+  right: -320px;
+  width: 300px;
+  height: 100vh;
+  background: white;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-sidebar.active {
+  right: 0;
+}
+
+.mobile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  border-bottom: 1px solid #e5e7eb;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.mobile-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.close-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 8px;
+  font-size: 20px;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.mobile-nav-links {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mobile-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  color: #4b5563;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.mobile-nav-item:hover {
+  background: #f3f4f6;
+  color: #667eea;
+}
+
+.mobile-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.mobile-divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 8px 0;
+}
+
+.mobile-nav-item.logout {
+  color: #ef4444;
+}
+
+.mobile-nav-item.logout:hover {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-  .navbar {
-    padding: 14px 20px;
+  .nav-menu-desktop {
+    display: none;
   }
 
-  .navbar-brand {
-    font-size: 20px;
+  .mobile-toggle {
+    display: flex;
   }
 
-  .btn {
-    padding: 8px 16px;
-    font-size: 14px;
+  .brand-title {
+    font-size: 18px;
+  }
+
+  .brand-subtitle {
+    font-size: 10px;
+  }
+
+  .logo-svg {
+    width: 32px;
+    height: 32px;
   }
 }
 
 @media (max-width: 480px) {
-  .navbar {
-    padding: 12px 16px;
+  .navbar-container {
+    padding: 0 16px;
+    height: 64px;
   }
 
-  .navbar-brand {
-    font-size: 18px;
+  .brand-title {
+    font-size: 16px;
   }
 
-  .navbar-actions {
-    gap: 8px;
+  .logo-svg {
+    width: 28px;
+    height: 28px;
   }
 
-  .btn {
-    padding: 8px 12px;
-    font-size: 13px;
+  .mobile-sidebar {
+    width: 280px;
+    right: -280px;
   }
 }

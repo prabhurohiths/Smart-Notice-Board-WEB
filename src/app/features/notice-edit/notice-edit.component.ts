@@ -35,6 +35,8 @@ export class NoticeEditComponent implements OnInit {
   // Dropdown states
   departmentDropdownOpen = false;
   yearDropdownOpen = false;
+  today = new Date().toISOString().split("T")[0];
+
 
   constructor(
     private noticeService: NoticeService,
@@ -47,7 +49,7 @@ export class NoticeEditComponent implements OnInit {
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (!id) {
-      this.router.navigate(['/notices']);
+      this.router.navigate(['/app/notices']);
       return;
     }
 
@@ -78,6 +80,7 @@ export class NoticeEditComponent implements OnInit {
         this.notice = data;
         this.previewUrls = data.imagePaths || [];
         this.notice.imageFileNames = data.imageFileNames || [];
+        this.notice.expiryDate = data.expiryDate;
       },
       error: () => {
         this.error = 'Failed to load notice details.';
@@ -124,15 +127,55 @@ export class NoticeEditComponent implements OnInit {
 
   // File upload
   onFilesSelected(event: any) {
-    const newFiles = Array.from(event.target.files as FileList) as File[];
-    this.selectedFiles = [...this.selectedFiles, ...newFiles];
+    const newFiles = Array.from(event.target.files as FileList);
 
-    newFiles.forEach(file => {
-      const reader = new FileReader();
-      reader.onload = (e: any) => this.previewUrls.push(e.target.result);
-      reader.readAsDataURL(file);
+    newFiles.forEach((file: File) => {
+      this.selectedFiles.push(file);
+
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (e: any) => this.previewUrls.push(e.target.result);
+        reader.readAsDataURL(file);
+      } else if (file.type === 'application/pdf') {
+        const url = URL.createObjectURL(file);
+        this.previewUrls.push(url);
+      }
     });
+
     event.target.value = '';
+  }
+
+  openPDF(file: any) {
+    // CASE 1: Already a Blob URL (from new uploaded file)
+    if (typeof file === 'string' && file.startsWith('blob:')) {
+      window.open(file, '_blank');
+      return;
+    }
+
+    // CASE 2: Base64 PDF from backend
+    if (typeof file === 'string' && file.startsWith('data:application/pdf')) {
+      const base64Data = file.split(',')[1];
+      const byteCharacters = atob(base64Data);
+      const byteNumbers = new Array(byteCharacters.length);
+
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: 'application/pdf' });
+      const blobUrl = URL.createObjectURL(blob);
+      window.open(blobUrl, '_blank');
+      return;
+    }
+
+    // CASE 3: File object (File from input)
+    if (file instanceof File) {
+      const url = URL.createObjectURL(file);
+      window.open(url, '_blank');
+      return;
+    }
+    console.warn('Unsupported PDF format:', file);
   }
 
   removeImage(index: number) {
@@ -183,6 +226,17 @@ export class NoticeEditComponent implements OnInit {
       return;
     }
 
+    // Expiry Date
+    if (!this.notice.expiryDate) {
+      this.error = "Expiry date is required.";
+      return;
+    }
+    const today = new Date().toISOString().split('T')[0];
+    if (this.notice.expiryDate < today) {
+      this.error = "Expiry date cannot be in the past.";
+      return;
+    }
+
     // Year
     if (
       this.notice.year === null ||
@@ -223,7 +277,7 @@ export class NoticeEditComponent implements OnInit {
               icon: "success"
             });
 
-            setTimeout(() => this.router.navigate(['/notices']), 600);
+            setTimeout(() => this.router.navigate(['/app/notices']), 600);
           },
           error: (err) => {
             Swal.fire({
@@ -233,7 +287,6 @@ export class NoticeEditComponent implements OnInit {
             });
           }
         });
-
     });
   }
 

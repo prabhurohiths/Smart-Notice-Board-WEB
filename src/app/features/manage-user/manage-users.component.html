@@ -16,6 +16,7 @@
             <th>Year</th>
             <th>Role</th>
             <th>Mobile Number</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -41,9 +42,14 @@
             <td data-label="Mobile Number">
               {{ u.mobileNumber || '-' }}
             </td>
+            <td data-label="Status">
+              <button class="status-btn" [ngClass]="u.active ? 'active' : 'inactive'" (click)="toggleStatus(u)">
+                {{ u.active ? 'Active' : 'Inactive' }}
+              </button>
+            </td>
             <td data-label="Actions" class="actions">
-              <button class="edit-btn" (click)="editUser(u)">✏️ Edit</button>
-              <button class="delete-btn" (click)="deleteUser(u.id)">🗑️ Delete</button>
+              <button class="edit-btn" data-tooltip="Edit User" (click)="editUser(u)">✏️</button>
+              <button class="delete-btn" data-tooltip="Delete User" (click)="deleteUser(u.id)">🗑️</button>
             </td>
           </tr>
         </tbody>

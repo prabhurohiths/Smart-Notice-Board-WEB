@@ -45,7 +45,7 @@ export class NoticeListComponent implements OnInit {
 
   //pagination variables
   currentPage = 0;
-  pageSize = 3;
+  pageSize = 6;
   totalPages = 0;
 
   constructor(
@@ -182,6 +182,66 @@ export class NoticeListComponent implements OnInit {
     return found ? found.yearName : '';
   }
 
+  isExpired(expiryDate: string | null | undefined): boolean {
+    if (!expiryDate) return false;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const exp = new Date(expiryDate);
+    exp.setHours(0, 0, 0, 0);
+    return exp < today;
+  }
+
+  isExpiringSoon(expiryDate: string | null | undefined): boolean {
+    if (!expiryDate) return false;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const exp = new Date(expiryDate);
+    exp.setHours(0, 0, 0, 0);
+    const diffDays = Math.ceil((exp.getTime() - today.getTime()) / (1000 * 3600 * 24));
+    return diffDays >= 0 && diffDays <= 2;
+  }
+
+  isImage(file: string): boolean {
+    return file.startsWith('data:image');
+  }
+
+  isPDF(file: string): boolean {
+    return file.includes('.pdf') || file.startsWith('data:application/pdf');
+  }
+
+  openPDF(file: any) {
+    // CASE 1: Already a Blob URL (from new uploaded file)
+    if (typeof file === 'string' && file.startsWith('blob:')) {
+      window.open(file, '_blank');
+      return;
+    }
+
+    // CASE 2: Base64 PDF from backend
+    if (typeof file === 'string' && file.startsWith('data:application/pdf')) {
+      const base64Data = file.split(',')[1];
+      const byteCharacters = atob(base64Data);
+      const byteNumbers = new Array(byteCharacters.length);
+
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: 'application/pdf' });
+      const blobUrl = URL.createObjectURL(blob);
+      window.open(blobUrl, '_blank');
+      return;
+    }
+
+    // CASE 3: File object (File from input)
+    if (file instanceof File) {
+      const url = URL.createObjectURL(file);
+      window.open(url, '_blank');
+      return;
+    }
+    console.warn('Unsupported PDF format:', file);
+  }
+
   // Filter Actions
   applyFilters() {
     const user = this.authService.getLoggedUser();
@@ -252,15 +312,23 @@ export class NoticeListComponent implements OnInit {
     this.selectedUploadedYear = null;
     this.selectedDepartment = '';
     this.isFiltered = false;
+
     this.filterCriteria = {
       postedBy: '',
       year: undefined,
       uploadedYear: undefined,
       department: undefined
     };
+
     this.currentPage = 0;
-    this.loadAllNotices();
+
+    if (this.isAdmin || this.isTeacher) {
+      this.loadAllNotices();
+    } else {
+      this.loadStudentNotices();
+    }
   }
+
 
   canEditNotice(notice: Notice): boolean {
     const user = this.authService.getLoggedUser();
@@ -272,7 +340,7 @@ export class NoticeListComponent implements OnInit {
 
   editNotice(notice: Notice): void {
     this.noticeService.setNoticeToEdit(notice);
-    this.router.navigate(['/edit-notice', notice.id]);
+    this.router.navigate(['/app/notices/edit-notice', notice.id]);
   }
 
   deleteNotice(noticeId: any): void {
@@ -359,7 +427,6 @@ export class NoticeListComponent implements OnInit {
     }
   }
 
-
   nextPage() {
     if (this.currentPage < this.totalPages - 1) {
       this.currentPage++;
@@ -377,7 +444,6 @@ export class NoticeListComponent implements OnInit {
       }
     }
   }
-
 
   previousPage() {
     if (this.currentPage > 0) {

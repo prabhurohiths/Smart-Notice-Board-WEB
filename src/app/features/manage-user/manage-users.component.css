@@ -22,35 +22,88 @@
 }
 
 .user-table-card {
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
   background: white;
   border-radius: 16px;
   padding: 24px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
   animation: fadeIn 0.5s ease-out;
+  overflow: hidden;
 }
 
 .table-wrapper {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .users-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 13px;
+  min-width: 1200px;
 }
+
+/* Optimized column widths */
+.users-table th:nth-child(1) {
+  width: 10%;
+}
+
+/* Username */
+.users-table th:nth-child(2) {
+  width: 12%;
+}
+
+/* Name */
+.users-table th:nth-child(3) {
+  width: 16%;
+}
+
+/* Email */
+.users-table th:nth-child(4) {
+  width: 10%;
+}
+
+/* Department */
+.users-table th:nth-child(5) {
+  width: 7%;
+}
+
+/* Year */
+.users-table th:nth-child(6) {
+  width: 9%;
+}
+
+/* Role */
+.users-table th:nth-child(7) {
+  width: 11%;
+}
+
+/* Mobile */
+.users-table th:nth-child(8) {
+  width: 9%;
+}
+
+/* Status */
+.users-table th:nth-child(9) {
+  width: 16%;
+}
+
+/* Actions */
 
 .users-table thead {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .users-table thead th {
   color: white;
-  padding: 16px;
+  padding: 14px 12px;
   text-align: left;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 13px;
   white-space: nowrap;
 }
 
@@ -64,12 +117,11 @@
 
 .users-table tbody tr {
   border-bottom: 1px solid #e2e8f0;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .users-table tbody tr:hover {
   background: #f7fafc;
-  transform: scale(1.01);
 }
 
 .users-table tbody tr:last-child {
@@ -77,26 +129,31 @@
 }
 
 .users-table tbody td {
-  padding: 16px;
+  padding: 14px 12px;
   color: #4a5568;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  vertical-align: middle;
 }
 
 .badge {
   display: inline-block;
-  padding: 6px 12px;
+  padding: 5px 10px;
   background: #e9ecef;
   color: #495057;
-  border-radius: 20px;
-  font-size: 12px;
+  border-radius: 16px;
+  font-size: 11px;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .role-badge {
   display: inline-block;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 16px;
+  font-size: 11px;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .role-admin {
@@ -116,20 +173,66 @@
 
 .actions {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
 .edit-btn,
 .delete-btn {
-  padding: 8px 16px;
+  padding: 6px 12px;
   border: none;
-  border-radius: 8px;
-  font-size: 13px;
+  border-radius: 6px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   white-space: nowrap;
+  position: relative;
+}
+
+.edit-btn::after,
+.delete-btn::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  background: #2d3748;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  z-index: 9999;
+  font-weight: 500;
+}
+
+.edit-btn::before,
+.delete-btn::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(2px);
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 4px solid #2d3748;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  z-index: 9999;
+}
+
+.edit-btn:hover::after,
+.edit-btn:hover::before,
+.delete-btn:hover::after,
+.delete-btn:hover::before {
+  opacity: 1;
 }
 
 .edit-btn {
@@ -170,50 +273,108 @@
   font-size: 18px;
 }
 
-.role-badge {
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
+/* Status Button Styling */
+.status-btn {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 16px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
-.role-admin {
-  background: #ede9fe;
-  color: #7c3aed;
-}
-
-.role-teacher {
-  background: #dbeafe;
-  color: #2563eb;
-}
-
-.role-student {
+.status-btn.active {
   background: #d1fae5;
   color: #059669;
+  border: 1px solid #059669;
 }
 
+.status-btn.active:hover {
+  background: #059669;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+}
+
+.status-btn.inactive {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #dc2626;
+}
+
+.status-btn.inactive:hover {
+  background: #dc2626;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
 
 @keyframes fadeIn {
   from {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
+/* Pagination Styling */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.page-btn,
+.page-number {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #edf2f7;
+  color: #2d3748;
+}
+
+.page-btn:hover:not(:disabled),
+.page-number:hover {
+  background: #667eea;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.page-number.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  transform: scale(1.05);
+}
+
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
   .users-table {
-    font-size: 13px;
+    font-size: 12px;
   }
 
   .users-table thead th,
   .users-table tbody td {
-    padding: 12px;
+    padding: 12px 10px;
   }
 }
 
@@ -231,6 +392,10 @@
   }
 
   /* Card-style layout for mobile */
+  .users-table {
+    min-width: auto;
+  }
+
   .users-table thead {
     display: none;
   }
@@ -252,7 +417,7 @@
   }
 
   .users-table tbody tr:hover {
-    transform: none;
+    background: #f7fafc;
   }
 
   .users-table td {
@@ -286,55 +451,10 @@
   .edit-btn,
   .delete-btn {
     padding: 6px 12px;
-    font-size: 12px;
+    font-size: 11px;
   }
-}
 
-
-/* Pagination Styling */
-.pagination-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 40px;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.page-btn,
-.page-number {
-  padding: 10px 16px;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background: #edf2f7;
-  color: #2d3748;
-}
-
-.page-btn:hover,
-.page-number:hover {
-  background: #667eea;
-  color: white;
-  transform: translateY(-2px);
-}
-
-.page-number.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  transform: scale(1.05);
-}
-
-.page-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-@media (max-width: 768px) {
   .pagination-container {
-    flex-wrap: wrap;
     gap: 6px;
   }
 

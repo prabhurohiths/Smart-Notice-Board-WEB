@@ -6,27 +6,27 @@
 
   <!-- ADMIN VIEW -->
   <div class="dashboard-actions" *ngIf="role === 'ADMIN'">
-    <a routerLink="/post-notice" class="action-card admin-card">
+    <a routerLink="/app/post-notice" class="action-card admin-card">
       <span class="card-icon">📢</span>
       <h3 class="card-title">Post New Notice</h3>
       <p class="card-description">Create and publish new notices for all users</p>
     </a>
 
-    <a routerLink="/notices" class="action-card admin-card">
+    <a routerLink="/app/notices" class="action-card admin-card">
       <span class="card-icon">🗂️</span>
       <h3 class="card-title">View All Notices</h3>
       <p class="card-description">Manage and review all posted notices</p>
     </a>
 
     <!-- NEW: Add New User -->
-    <a routerLink="/add-user" class="action-card admin-card">
+    <a routerLink="/app/add-user" class="action-card admin-card">
       <span class="card-icon">➕</span>
       <h3 class="card-title">Add New User</h3>
       <p class="card-description">Register Teachers, Students, or Admins</p>
     </a>
 
     <!-- NEW: Manage Users -->
-    <a routerLink="/manage-users" class="action-card admin-card">
+    <a routerLink="/app/manage-users" class="action-card admin-card">
       <span class="card-icon">👥</span>
       <h3 class="card-title">Manage Users</h3>
       <p class="card-description">Edit or update existing user information</p>
@@ -36,12 +36,12 @@
 
   <!-- TEACHER VIEW -->
   <div class="dashboard-actions" *ngIf="role === 'TEACHER'">
-    <a routerLink="/post-notice" class="action-card teacher-card">
+    <a routerLink="/app/post-notice" class="action-card teacher-card">
       <span class="card-icon">📢</span>
       <h3 class="card-title">Post Notice</h3>
       <p class="card-description">Share important updates with your department</p>
     </a>
-    <a routerLink="/notices" class="action-card teacher-card">
+    <a routerLink="/app/notices" class="action-card teacher-card">
       <span class="card-icon">📚</span>
       <h3 class="card-title">View Notices</h3>
       <p class="card-description">Browse department notices and announcements</p>
@@ -50,7 +50,7 @@
 
   <!-- STUDENT VIEW -->
   <div class="dashboard-actions" *ngIf="role === 'STUDENT'">
-    <a routerLink="/notices" class="action-card student-card">
+    <a routerLink="/app/notices" class="action-card student-card">
       <span class="card-icon">📖</span>
       <h3 class="card-title">View Notices</h3>
       <p class="card-description">Stay updated with latest announcements</p>

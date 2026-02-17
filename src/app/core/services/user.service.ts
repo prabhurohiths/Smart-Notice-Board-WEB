@@ -62,6 +62,13 @@ export class UserService {
     );
   }
 
+  updateUserStatus(id: number, active: boolean): Observable<any> {
+    return this.http.put(
+      `${this.authService.basePath}user/updateStatus/${id}`,
+      { active }
+    );
+  }
+
   getCurrentUser(): User | null {
     return JSON.parse(sessionStorage.getItem('user') || 'null');
   }

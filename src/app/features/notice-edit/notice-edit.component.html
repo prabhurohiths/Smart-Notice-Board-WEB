@@ -44,22 +44,39 @@
             </ul>
           </div>
         </div>
+
+        <!-- Expiry Date -->
+        <div class="form-group">
+          <label>Expiry Date *</label>
+          <input type="date" class="form-input" [(ngModel)]="notice.expiryDate" name="expiryDate" [min]="today" />
+        </div>
+
       </div>
 
       <!-- File Upload -->
       <div class="file-upload-wrapper">
         <label class="file-upload-label">
           <span class="upload-icon">📎</span>
-          <span>Click to upload new images</span>
-          <input type="file" class="file-upload-input" (change)="onFilesSelected($event)" multiple accept="image/*" />
+          <span>Click to upload Images / PDF</span>
+          <input type="file" class="file-upload-input" (change)="onFilesSelected($event)" multiple
+            accept="image/*,application/pdf" />
         </label>
       </div>
 
       <div *ngIf="previewUrls.length > 0" class="preview-section">
         <h4 class="preview-header">Image Preview</h4>
         <div class="preview-grid">
-          <div *ngFor="let img of previewUrls; let i = index" class="preview-item">
-            <img [src]="img" class="preview-image" alt="Preview" />
+          <div *ngFor="let file of previewUrls; let i = index" class="preview-item">
+
+            <!-- IMAGE preview -->
+            <img *ngIf="file.startsWith('data:image')" [src]="file" class="preview-image" />
+
+            <!-- PDF preview -->
+            <div *ngIf="file.includes('application/pdf') || file.startsWith('blob:')" class="pdf-preview-box"
+              (click)="openPDF(file)">
+              <img src="assets/PDF.png" class="pdf-icon" />
+            </div>
+
             <button type="button" (click)="removeImage(i)" class="remove-btn">✕</button>
           </div>
         </div>

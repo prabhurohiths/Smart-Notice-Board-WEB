@@ -16,6 +16,7 @@ import { ResetPasswordComponent } from './features/reset-password/reset-password
 import { ManageUsersComponent } from './features/manage-user/manage-users.component';
 import { AddUserComponent } from './features/add-user/add-user.component';
 import { EditUserComponent } from './features/edit-user/edit-user.component';
+import { ProfileComponent } from './features/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { EditUserComponent } from './features/edit-user/edit-user.component';
     AddUserComponent,
     ManageUsersComponent,
     EditUserComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,

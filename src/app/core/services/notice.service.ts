@@ -85,7 +85,7 @@ export class NoticeService {
     formData.append('notice', new Blob([JSON.stringify(notice)], { type: 'application/json' }));
 
     if (files && files.length > 0) {
-      files.forEach(file => formData.append('images', file));
+      files.forEach(file => formData.append('files', file));
     }
 
     return this.http.post<Notice>(

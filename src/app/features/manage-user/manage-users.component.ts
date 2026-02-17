@@ -13,7 +13,7 @@ import { UserService } from '../../core/services/user.service';
 export class ManageUsersComponent implements OnInit {
   users: User[] = [];
   currentPage = 0;
-  pageSize = 3;
+  pageSize = 6;
   totalPages = 0;
 
   constructor(private userService: UserService, private router: Router) { }
@@ -54,8 +54,45 @@ export class ManageUsersComponent implements OnInit {
   }
 
   editUser(user: User) {
-    this.router.navigate(['/edit-user', user.id]);
+    this.router.navigate(['/app/manage-users/edit-user', user.id]);
   }
+
+  toggleStatus(user: User) {
+    const newStatus = !user.active;
+    const statusText = newStatus ? "activate" : "deactivate";
+    const confirmColor = newStatus ? "#059669" : "#dc2626"; // green / red
+
+    Swal.fire({
+      title: `Are you sure?`,
+      text: `Do you want to ${statusText} user "${user.username}"?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: confirmColor,
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: `Yes, ${statusText}`,
+      cancelButtonText: "Cancel"
+    }).then(result => {
+      if (!result.isConfirmed) {
+        return;
+      }
+
+      // API CALL
+      this.userService.updateUserStatus(user.id!, newStatus).subscribe({
+        next: () => {
+          user.active = newStatus; // update UI instantly
+          Swal.fire({
+            title: "Success",
+            text: `User "${user.username}" is now ${newStatus ? 'Active' : 'Inactive'}.`,
+            icon: "success"
+          });
+        },
+        error: err => {
+          Swal.fire("Error", err.error?.message || "Failed to update status", "error");
+        }
+      });
+    });
+  }
+
 
   deleteUser(id: number | undefined) {
     if (!id) return;

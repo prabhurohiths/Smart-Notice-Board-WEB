@@ -275,7 +275,7 @@ export class AddUserComponent implements OnInit {
       next: () => {
         this.success = "✅ User added successfully!";
         this.error = "";
-        setTimeout(() => this.router.navigate(['/manage-users']), 1000);
+        setTimeout(() => this.router.navigate(['/app/manage-users']), 1000);
       },
       error: (err) => {
         this.error = err.error?.message || "❌ Failed to add user.";

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserService } from '../../core/services/user.service';
 import { AuthService } from '../../core/services/auth.service';
+import { UserService } from '../../core/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -16,23 +16,31 @@ export class LoginComponent implements OnInit {
 
   constructor(private user: UserService, private router: Router, private authService: AuthService) { }
 
-   ngOnInit() {
+  ngOnInit() {
     this.authService.logout();
-   }
+  }
 
   login() {
-    // Step 1: Request token
+    this.error = ""; // clear old error
+
+    // STEP 1: Request token
     this.user.token(this.username, this.password).subscribe({
       next: () => {
-        // Step 2: Fetch user details
+
+        // STEP 2: Fetch user details
         this.user.login(this.username, this.password).subscribe({
           next: (user) => {
             this.redirectBasedOnRole(user);
           },
-          error: err => this.error = err.error?.message || 'Login failed'
+          error: err => {
+            this.error = err.error?.message || 'Login failed.';
+          }
         });
+
       },
-      error: err => this.error = err.error?.message || 'Login failed'
+      error: err => {
+        this.error = err.error?.message || 'Login failed.';
+      }
     });
   }
 
@@ -49,7 +57,7 @@ export class LoginComponent implements OnInit {
     if (user.firstLogin) {
       this.router.navigate(['/reset-password']);
     } else {
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/app/dashboard']);
     }
   }
 
